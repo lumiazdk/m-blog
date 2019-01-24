@@ -10,7 +10,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Swiper from 'swiper'
 import indexStyles from './index.scss'
 import HomeList from './home/homeList.js'
+import Message from   './message/message.js'
+
 import User from './user/user.js'
+import Category from './category/category.js'
+import './icon.scss'
+
 
 import axios from 'axios'
 axios.defaults.baseURL = 'http://192.168.0.10:8080/';
@@ -72,19 +77,18 @@ class Index extends React.Component {
     this.setState({
       mySwiper
     })
-    mySwiper.slideTo(2, 500, false);//切换到第一个slide，速度为1秒
+    // mySwiper.slideTo(2, 500, false);//切换到第一个slide，速度为1秒
 
   }
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-
     return (
       <div className='index'>
         <div className="swiper-container">
           <div className="swiper-wrapper">
-            <div className="swiper-slide"><HomeList></HomeList></div>
-            <div className="swiper-slide"><User></User></div>
+            <div className="swiper-slide"><Category></Category></div>
+            <div className="swiper-slide"><Message></Message></div>
             <div className="swiper-slide"><User></User></div>
           </div>
         </div>
@@ -95,9 +99,9 @@ class Index extends React.Component {
           showLabels
           className={classes.root}
         >
-          <BottomNavigationAction label="首页" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="todo" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="我的" icon={<LocationOnIcon />} />
+          <BottomNavigationAction label="首页" icon={<i className='iconfont icon-home-fill'></i>} />
+          <BottomNavigationAction label="消息" icon={<i className='iconfont icon-xiaoxi'></i>} />
+          <BottomNavigationAction label="我的" icon={<i className='iconfont icon-wode'></i>} />
         </BottomNavigation>
       </div>
     );

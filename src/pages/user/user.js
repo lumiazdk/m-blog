@@ -308,7 +308,7 @@ class User extends React.Component {
                     <AppBar className={classes.appBar}>
                         <Toolbar>
                             <IconButton color="inherit" onClick={this.addPosthandleClose} aria-label="Close">
-                                <CloseIcon />
+                                <i className='iconfont icon-iconfontjiantou'></i>
                             </IconButton>
                             <Typography variant="h6" color="inherit" className={classes.flex}>
                             </Typography>

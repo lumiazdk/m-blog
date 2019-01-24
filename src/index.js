@@ -6,6 +6,7 @@ import Routers from './routerMap'
 import * as serviceWorker from './serviceWorker';
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
+import './libs/moment.js'
 class SwitchCom extends React.Component {
     componentDidMount() {
         const { match, location, history } = this.props

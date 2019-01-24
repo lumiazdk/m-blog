@@ -1,0 +1,38 @@
+.list {
+  position: absolute;
+  bottom: 0px;
+  top: 113px;
+  width: 100%;
+  .wrapper {
+    overflow: hidden;
+    height: 100%;
+  }
+  .items {
+    margin-bottom: 10px;
+  }
+  .content {
+    padding: 10px;
+  }
+  .pullCircularProgress {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    margin-left: -20px;
+  }
+  .downCircularProgress {
+    bottom: 10px;
+    left: 50%;
+    margin-left: -20px;
+  }
+  .down {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // margin-bottom: 40px;
+  }
+  .up {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
