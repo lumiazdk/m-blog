@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Swiper from 'swiper'
 import indexStyles from './index.scss'
-import HomeList from './home/homeList.js'
-import Message from   './message/message.js'
-
+import Message from './message/message.js'
 import User from './user/user.js'
 import Category from './category/category.js'
+import Friends from './friends/friends.js'
+import Find from './find/find.js'
+import SwipeableViews from 'react-swipeable-views';
+
 import './icon.scss'
-
-
 import axios from 'axios'
+import io from 'socket.io-client';
+import SocketIOClient from './socket.js'
+const socket = io('http://192.168.0.10:8080');
+global.socket = socket
+SocketIOClient()
 axios.defaults.baseURL = 'http://192.168.0.10:8080/';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Authorization'] = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyNjY4NDkzMTAsIm5hbWUiOiIxMjMifQ.LohSTredC55QcoNI4g7WF_JwpmACbuPNbRd-MXuDIv0';
@@ -45,63 +47,60 @@ const styles = {
     position: 'absolute',
     bottom: 0,
     width: '100%',
+    // width: 500,
+  },
+  tab: {
+    minWidth: 'auto'
+  },
+  slide: {
+    height: '100%'
   },
 };
 
 class Index extends React.Component {
   state = {
-    value: 0,
+    value: localStorage.page ? parseInt(localStorage.page) : 0,
     mySwiper: ''
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
-    console.log(value)
-    this.state.mySwiper.slideTo(value, 500, false);//切换到第一个slide，速度为1秒
+    localStorage.page = value
+  };
+  handleChangeIndex = value => {
+    this.setState({
+      value,
+    });
+    localStorage.page = value
+
   };
   componentDidMount() {
     let _this = this
-    var mySwiper = new Swiper('.swiper-container', {
-      autoplay: false,//可选选项，自动滑动
-      direction: 'horizontal', // 垂直切换选项
-      loop: false, // 循环模式选项
-      on: {
-        slideChangeTransitionEnd: function () {
-          console.log(this.activeIndex);//切换结束时，告诉我现在是第几个slide
-          _this.setState({
-            value: this.activeIndex
-          })
-        },
-      }
-    })
-    this.setState({
-      mySwiper
-    })
-    // mySwiper.slideTo(2, 500, false);//切换到第一个slide，速度为1秒
-
   }
   render() {
     const { classes } = this.props;
     const { value } = this.state;
     return (
       <div className='index'>
-        <div className="swiper-container">
-          <div className="swiper-wrapper">
-            <div className="swiper-slide"><Category></Category></div>
-            <div className="swiper-slide"><Message></Message></div>
-            <div className="swiper-slide"><User></User></div>
-          </div>
-        </div>
+        <SwipeableViews index={value} onChangeIndex={this.handleChangeIndex} style={{ height: '100%' }}>
+          <div style={Object.assign({}, styles.slide)}><Category></Category></div>
+          <div style={Object.assign({}, styles.slide)}><Message></Message></div>
+          <div style={Object.assign({}, styles.slide)}><Friends></Friends></div>
+          <div style={Object.assign({}, styles.slide)}><Find></Find></div>
+          <div style={Object.assign({}, styles.slide)}><User></User></div>
+        </SwipeableViews>
         <CssBaseline />
         <BottomNavigation
           value={value}
           onChange={this.handleChange}
-          showLabels
           className={classes.root}
+          showLabels
         >
-          <BottomNavigationAction label="首页" icon={<i className='iconfont icon-home-fill'></i>} />
-          <BottomNavigationAction label="消息" icon={<i className='iconfont icon-xiaoxi'></i>} />
-          <BottomNavigationAction label="我的" icon={<i className='iconfont icon-wode'></i>} />
+          <BottomNavigationAction label="首页" icon={<i className='iconfont icon-home-fill'></i>} className={classes.tab} />
+          <BottomNavigationAction label="消息" icon={<i className='iconfont icon-xiaoxi'></i>} className={classes.tab} />
+          <BottomNavigationAction label="好友" icon={<i className='iconfont icon-tianchongxing-'></i>} className={classes.tab} />
+          <BottomNavigationAction label="发现" icon={<i className='iconfont icon-faxian'></i>} className={classes.tab} />
+          <BottomNavigationAction label="我的" icon={<i className='iconfont icon-wode'></i>} className={classes.tab} />
         </BottomNavigation>
       </div>
     );

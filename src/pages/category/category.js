@@ -8,12 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios'
 import List from './list.js'
 import './category.scss'
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import Toolbar from '@material-ui/core/Toolbar';
+import Slide from '@material-ui/core/Slide';
+import postDetail from '../postDetail/postDetail.js'
 function TabContainer(props) {
     return (
         <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -43,7 +44,7 @@ class Category extends React.Component {
     state = {
         value: 0,
         categorylist: [],
-        userInfo: JSON.parse(localStorage.userInfo)
+        userInfo: JSON.parse(localStorage.userInfo),
     };
     async componentDidMount() {
         let getCategory = await this.getCategory()
@@ -71,7 +72,6 @@ class Category extends React.Component {
     render() {
         const { classes } = this.props;
         const { value } = this.state;
-
         return (
             <div className={classes.root}>
                 <AppBar position="static">
@@ -108,9 +108,6 @@ class Category extends React.Component {
                 {this.state.categorylist.map((item, k) => (<React.Fragment key={item.categoryId}>
                     {value == k + 1 && <List categoryId={item.categoryId}></List>}
                 </React.Fragment>))}
-
-
-
 
             </div>
         );

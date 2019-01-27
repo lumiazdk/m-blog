@@ -15,6 +15,16 @@ import Grid from '@material-ui/core/Grid';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Divider from '@material-ui/core/Divider';
 import './postDetail.scss'
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import moment from 'moment'
+import { withSnackbar } from 'notistack';
+
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -26,7 +36,6 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 2,
         flexGrow: 1,
         margin: '10px'
-
     },
     grow: {
         flexGrow: 1,
@@ -39,11 +48,16 @@ const styles = theme => ({
 
 class PostDetail extends React.Component {
     state = {
-        detail: {}
+        detail: {},
+        open: false,
+        isReply: false,
+        replyName: '',
+        comment: '',
+        commentList: [],
+        fabulousList: []
     }
     async componentDidMount() {
-        const { match, location, history } = this.props
-        console.log(match)
+        const { id } = this.props
         let data = await axios({
             method: 'post',
             url: 'getPost',
@@ -52,7 +66,7 @@ class PostDetail extends React.Component {
                 pageSize: 10,
                 user_id: JSON.parse(localStorage.userInfo).user_id,
                 where: {
-                    id: match.params.id
+                    id: id
                 }
             }
         });
@@ -61,12 +75,24 @@ class PostDetail extends React.Component {
                 detail: data.result.result[0]
             })
         }
+        //获取评论
+        this.getComment()
+        //获取赞
+        this.getfabulous()
     }
-    back = () => {
-        const { match, location, history } = this.props
-        history.goBack()
+    //通知
+    enqueueSnackbar = (text, variant) => {
+        this.props.enqueueSnackbar(text, {
+            variant: variant,
+            autoHideDuration: 1000,
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'left',
+            },
+        });
+    }
 
-    }
+    //赞
     addfabulous = async (item) => {
         let data = await axios({
             method: 'post',
@@ -77,28 +103,131 @@ class PostDetail extends React.Component {
             }
         });
         if (data.code == 1) {
+            if (item.isfabulous) {
+                item.fabulous_num = item.fabulous_num - 1
+            } else {
+                item.fabulous_num = item.fabulous_num + 1
+
+            }
             item.isfabulous = !item.isfabulous
             this.setState((prevState) => ({
                 item: item
             }))
+            this.getfabulous()
         }
     };
+    //获取赞
+    getfabulous = async () => {
+        let data = await axios({
+            method: 'post',
+            url: 'getFabulous',
+            data: {
+                post_id: this.state.detail.id,
+            }
+        });
+        if (data.code == 1) {
+            this.setState({
+                fabulousList: data.result.result
+            })
+        }
+    }
+    //打开回复
+    handleClickOpen = (value, item) => {
+        if (value) {
+            this.setState({
+                father_id: item.userInfo.user_id,
+                replyName: item.userInfo.user_name
+            })
+        }
+        this.setState({ open: true });
+        this.setState({ isReply: value });
+
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+    // 获取评论
+    getComment = async () => {
+        let data = await axios({
+            method: 'post',
+            url: 'getComment',
+            data: {
+                post_id: this.state.detail.id,
+            }
+        });
+        if (data.code == 1) {
+            this.setState({
+                commentList: data.result.result
+            })
+        }
+    }
+    //回复
+    addComment = async () => {
+        console.log(this.refs.comment)
+        let form = {
+            post_id: this.state.detail.id,
+            user_id: JSON.parse(localStorage.userInfo).user_id,
+            content: this.state.comment,
+        }
+        if (this.state.isReply) {
+            form.father_id = this.state.father_id
+        } else {
+            form.father_id = -1
+        }
+        let data = await axios({
+            method: 'post',
+            url: 'addComment',
+            data: form
+        });
+        if (data.code == 1) {
+            this.enqueueSnackbar('评论成功', 'success')
+            this.getComment()
+            this.handleClose()
+        } else {
+            this.enqueueSnackbar('评论失败', 'error')
+            this.handleClose()
+        }
+    }
+    //mommentchange
+    commentChange = (event) => {
+        this.setState({ comment: event.target.value });
+    }
     render() {
         const { classes } = this.props;
         const { detail } = this.state;
-
+        const name = (<span>回复:{this.state.replyName}</span>)
         return (
             <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={this.back}>
-                            <i className='iconfont icon-back'></i>
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.grow}>
-                            详情
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogContent>
+                        <DialogContentText>
+                            {this.state.isReply && name}
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="评论"
+                            type="text"
+                            fullWidth
+                            onChange={this.commentChange}
+                            value={this.state.comment}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={this.handleClose} color="primary" onClick={this.addComment}>
+                            回复
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <Paper className={classes.paper} elevation={1}>
                     <Typography variant="h5" component="span" >
                         <span dangerouslySetInnerHTML={{ __html: detail.content }}></span>
@@ -108,17 +237,17 @@ class PostDetail extends React.Component {
                             <Button color={detail.isfabulous ? 'secondary' : 'default'} className={classes.button} onClick={this.addfabulous.bind(this, detail)}>
                                 <i className='iconfont icon-like-b'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }} color={detail.isfabulous ? 'secondary' : 'default'}>
-                                    0
+                                    {detail.fabulous_num}
                                 </Typography>
                             </Button>
                         </Grid>
 
                         <Grid item xs={3}>
-                            <Button className={classes.button}>
+                            <Button className={classes.button} onClick={this.handleClickOpen.bind(this, false)}>
                                 <i className='iconfont icon-xiaoxi'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }}>
-                                    0
-                            </Typography>
+                                    {this.state.commentList.length}
+                                </Typography>
                             </Button>
                         </Grid>
 
@@ -143,39 +272,44 @@ class PostDetail extends React.Component {
                     </Grid>
 
                     <Grid container spacing={24}>
-                        <Grid item>
-                            <Avatar alt="Remy Sharp" src={detail.background} className={classes.avatar} />
-                        </Grid>
+                        {this.state.fabulousList.slice(0, 9).map((item, k) =>
+                            <Grid item key={k}>
+                                <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
+                            </Grid>)}
+
                     </Grid>
                     <Typography gutterBottom variant="subtitle1" style={{ marginTop: '10px' }}>
-                        回帖(22)
+                        回帖({this.state.commentList.length})
                         <Divider />
                     </Typography>
-                    <Grid container spacing={8} style={{ marginBottom: '10px' }}>
+                    {this.state.commentList.map((item, k) => <Grid container spacing={8} style={{ marginBottom: '10px' }} key={k}>
                         <Grid item xs={2}>
                             <ButtonBase className={classes.image}>
-                                <Avatar alt="Remy Sharp" src={detail.background} className={classes.avatar} />
+                                <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
                             </ButtonBase>
                         </Grid>
-                        <Grid item xs={10} sm container style={{ borderBottom: '1px solid red' }}>
+                        <Grid item xs={10} sm container style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.54)' }}>
                             <Grid item xs container direction="column" spacing={16}>
                                 <Grid item xs>
                                     <Typography gutterBottom variant="subtitle1">
-                                        name
+                                        {item.userInfo.user_name}
                                     </Typography>
-                                    <Typography color="textSecondary">1楼</Typography>
-                                    <Typography gutterBottom><span className='fathername'>@name&nbsp;</span>哈哈哈</Typography>
+                                    <Typography color="textSecondary">{k + 1}楼</Typography>
+                                    <Typography gutterBottom>{item.fatherInfo && <span className='fathername'>@{item.fatherInfo.user_name}&nbsp;</span>}{item.content}</Typography>
 
                                 </Grid>
                                 <Grid item>
-                                    <Typography color="textSecondary">时间</Typography>
+                                    <Typography color="textSecondary">{moment(item.create_time).fromNow()}</Typography>
                                 </Grid>
                             </Grid>
-                            {/* <Grid item>
-                                <Typography variant="subtitle1">$19.00</Typography>
-                            </Grid> */}
+                            <Grid item>
+                                <Button color="primary" onClick={this.handleClickOpen.bind(this, true, item)}>
+                                    回复
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </Grid>)}
+
                 </Paper>
 
             </div>
@@ -188,4 +322,4 @@ PostDetail.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles)(PostDetail));
+export default withRouter(withSnackbar(withStyles(styles)(PostDetail)));

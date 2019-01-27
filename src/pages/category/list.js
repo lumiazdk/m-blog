@@ -48,7 +48,7 @@ class List extends React.Component {
         });
         return data
     }
-
+    
     async componentDidMount() {
         const _this = this
         let wrapper = this.refs.wrapper
@@ -86,7 +86,6 @@ class List extends React.Component {
                 console.log('下拉刷新')
             } else if (swiper.translate > 50) {
                 console.log('释放刷新')
-
             }
         }
         async function touchEnd() {

@@ -32,7 +32,15 @@ const options = [
     {
         k: 'addPost',
         name: '添加文章'
-    }
+    },
+    {
+        k: 'infoSetting',
+        name: '资料设置'
+    },
+    {
+        k: 'logout',
+        name: '退出登录'
+    },
 ];
 const ITEM_HEIGHT = 48;
 
@@ -171,6 +179,13 @@ class User extends React.Component {
             }
             editor.create()
             this.handleClose()
+        }
+        if (index == 'logout') {
+            localStorage.clear();
+            this.props.history.push('/login')
+        }
+        if (index == 'infoSetting') {
+            this.props.history.push('/infoSetting')
         }
     };
     //打开添加文章
@@ -411,7 +426,7 @@ class User extends React.Component {
                                         }}
                                     >
                                         {options.map(option => (
-                                            <MenuItem key={option} selected={option === 'Pyxis'} onClick={event => this.handleMenuItemClick(event, option.k)}>
+                                            <MenuItem key={option.k} selected={option === 'Pyxis'} onClick={event => this.handleMenuItemClick(event, option.k)}>
                                                 {option.name}
 
                                             </MenuItem>
@@ -420,7 +435,7 @@ class User extends React.Component {
                                 </div>
                             }
                             title={userInfo.user_name}
-                            // subheader="September 14, 2016"
+                        // subheader="September 14, 2016"
                         />
                         <CardContent>
 

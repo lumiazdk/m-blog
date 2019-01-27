@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Index from './pages/index';
-import Login from './pages/account/login.js';
 import Routers from './routerMap'
 import * as serviceWorker from './serviceWorker';
 import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import './libs/moment.js'
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import enLocale from 'date-fns/locale/zh-CN';
+import DateFnsUtils from '@date-io/date-fns';
+
+
+// pick utils
 class SwitchCom extends React.Component {
     componentDidMount() {
         const { match, location, history } = this.props
@@ -31,7 +35,7 @@ class SwitchCom extends React.Component {
         )
     }
 }
-ReactDOM.render((<SnackbarProvider maxSnack={3}><SwitchCom></SwitchCom></SnackbarProvider>), document.getElementById('root'));
+ReactDOM.render((<MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}><SnackbarProvider maxSnack={3}><SwitchCom></SwitchCom></SnackbarProvider></MuiPickersUtilsProvider>), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -7,7 +7,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Recent from './recent.js'
-
 function TabContainer({ children, dir }) {
     return (
         <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
@@ -65,8 +64,8 @@ class FullWidthTabs extends React.Component {
                     onChangeIndex={this.handleChangeIndex}
                 >
                     <TabContainer dir={theme.direction}><Recent></Recent></TabContainer>
-                    <TabContainer dir={theme.direction}>1</TabContainer>
-                    <TabContainer dir={theme.direction}>1</TabContainer>
+                    <TabContainer dir={theme.direction}>暂未开发</TabContainer>
+                    <TabContainer dir={theme.direction}>暂未开发</TabContainer>
                 </SwipeableViews>
             </div>
         );

@@ -22,7 +22,15 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withRouter } from 'react-router'
 import Grid from '@material-ui/core/Grid';
-
+import Dialog from '@material-ui/core/Dialog';
+import Toolbar from '@material-ui/core/Toolbar';
+import Slide from '@material-ui/core/Slide';
+import PostDetail from '../pages/postDetail/postDetail.js'
+import AppBar from '@material-ui/core/AppBar';
+//子页动画
+function pageTransition(props) {
+    return <Slide direction="left" {...props} />;
+}
 const options = [
     {
         k: 'guanzhu',
@@ -51,8 +59,17 @@ class RecipeReviewCard extends React.Component {
         expanded: false,
         item: this.props.item,
         anchorEl: null,
+        pageopen: false,
+        title: '详情'
+    };
+    //子页
+    pagehandleClickOpen = () => {
+        this.setState({ pageopen: true });
     };
 
+    pagehandleClose = () => {
+        this.setState({ pageopen: false });
+    };
     addfabulous = async (item) => {
         let data = await axios({
             method: 'post',
@@ -63,6 +80,12 @@ class RecipeReviewCard extends React.Component {
             }
         });
         if (data.code == 1) {
+            if (item.isfabulous) {
+                item.fabulous_num = item.fabulous_num - 1
+            } else {
+                item.fabulous_num = item.fabulous_num + 1
+
+            }
             item.isfabulous = !item.isfabulous
             this.setState((prevState) => ({
                 item: item
@@ -77,18 +100,15 @@ class RecipeReviewCard extends React.Component {
     handleClose = () => {
         this.setState({ anchorEl: null });
     };
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (this.state.item != this.props.item) {
-    //         this.setState({
-    //             item: this.props.item
-    //         })
-    //     }
-    //     return true;
-    // }
-    postDetail = () => {
-        const { match, location, history } = this.props
-        history.push(`/postDetail/${this.state.item.id}`)
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.item != this.props.item) {
+            this.setState({
+                item: this.props.item
+            })
+        }
+        return true;
     }
+    
     render() {
         const { item, anchorEl } = this.state;
         const { classes } = this.props;
@@ -137,7 +157,7 @@ class RecipeReviewCard extends React.Component {
                         className={classes.media}
                         image={item.background}
                         title="Paella dish"
-                        onClick={this.postDetail}
+                        onClick={this.pagehandleClickOpen}
                     />
                     <CardContent>
                         <Typography component="p" style={{ fontWeight: 'bolder' }}>
@@ -154,7 +174,7 @@ class RecipeReviewCard extends React.Component {
                             <Button color={item.isfabulous ? 'secondary' : 'default'} className={classes.button} onClick={this.addfabulous.bind(this, item)}>
                                 <i className='iconfont icon-like-b'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }} color={item.isfabulous ? 'secondary' : 'default'}>
-                                    0
+                                    {item.fabulous_num}
                                 </Typography>
                             </Button>
                         </Grid>
@@ -163,8 +183,8 @@ class RecipeReviewCard extends React.Component {
                             <Button className={classes.button}>
                                 <i className='iconfont icon-xiaoxi'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }}>
-                                    0
-                            </Typography>
+                                    {item.comment_num}
+                                </Typography>
                             </Button>
                         </Grid>
 
@@ -188,6 +208,26 @@ class RecipeReviewCard extends React.Component {
 
                     </Grid>
                 </CardActions>
+                {/* 子页 */}
+                <Dialog
+                    fullScreen
+                    open={this.state.pageopen}
+                    onClose={this.pagehandleClose}
+                    TransitionComponent={pageTransition}
+                >
+                    <AppBar className={classes.appBar} position='static'>
+                        <Toolbar>
+                            <IconButton color="inherit" onClick={this.pagehandleClose} aria-label="Close">
+                                <i className='iconfont icon-back'></i>
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" className={classes.grow}>
+                                {this.state.title}
+                            </Typography>
+                        </Toolbar>
+
+                    </AppBar>
+                    {this.state.pageopen == true && <PostDetail id={item.id} ></PostDetail>}
+                </Dialog>
             </Card>
         );
     }

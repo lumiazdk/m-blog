@@ -134,7 +134,7 @@ class Login extends React.Component {
     }
     changeLogin = () => {
         this.setState({
-            isLogin: false
+            isLogin: !this.state.isLogin
         })
     }
     registwer = async () => {
@@ -195,10 +195,16 @@ class Login extends React.Component {
                 <div className={classes.root}>
                     <AppBar position="static">
                         <Toolbar>
-                            <Typography variant="h6" color="inherit" className={classes.grow}>
+                            {this.state.isLogin && <Typography variant="h6" color="inherit" className={classes.grow}>
                                 登陆
-                            </Typography>
-                            <Button color="inherit" onClick={this.changeLogin}>注册</Button>
+                            </Typography>}
+                            {!this.state.isLogin && <Typography variant="h6" color="inherit" className={classes.grow}>
+                                注册
+                            </Typography>}
+                            {this.state.isLogin && <Button color="inherit" onClick={this.changeLogin}>注册</Button>}
+                            {!this.state.isLogin && <Button color="inherit" onClick={this.changeLogin}>登陆</Button>}
+
+
                         </Toolbar>
                     </AppBar>
                 </div>
@@ -221,7 +227,7 @@ class Login extends React.Component {
                         {isLogin && <Button variant="contained" color="primary" className={classes.button} onClick={this.login}>
                             登陆
                         </Button>}
-                        {!isLogin && <Button variant="contained" color="primary" className={classes.button} onClick={this.registwer}>
+                        {!isLogin && <Button variant="contained" color="secondary" className={classes.button} onClick={this.registwer}>
                             注册
                         </Button>}
                     </div>
