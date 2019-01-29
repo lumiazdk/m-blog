@@ -18,6 +18,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { withRouter } from 'react-router'
 import axios from 'axios'
 import { withSnackbar } from 'notistack';
+import SocketIOClient from '../socket.js'
+
 const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
@@ -127,6 +129,7 @@ class Login extends React.Component {
             localStorage.token = data.result.token
             localStorage.userInfo = JSON.stringify(data.result.userInfo)
             const { match, location, history } = this.props
+            SocketIOClient()
             history.push('/')
         } else {
             this.enqueueSnackbar(data.message, 'error')

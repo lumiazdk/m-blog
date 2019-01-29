@@ -48,7 +48,7 @@ class List extends React.Component {
         });
         return data
     }
-    
+
     async componentDidMount() {
         const _this = this
         let wrapper = this.refs.wrapper
@@ -57,6 +57,7 @@ class List extends React.Component {
             slidesPerView: 'auto',
             freeMode: true,
             mousewheel: true,
+            preloadImages: false,
             on: {
                 touchMove: touchMove,
                 touchEnd: touchEnd
@@ -77,7 +78,6 @@ class List extends React.Component {
         } else {
             this.downprogressend()
         }
-
         async function touchMove(event) {
             //手动滑动中触发
             // var _viewHeight = this.refs['swiper-wrapper'].offsetHeight;
@@ -171,10 +171,10 @@ class List extends React.Component {
         let _this = this
         async function progress() {
             const { downcompleted } = _this.state;
-            _this.setState({ downcompleted: 0 });
+            await _this.setState({ downcompleted: 0 });
             const diff = Math.random() * 10;
             console.log(diff)
-            _this.setState({ downcompleted: Math.min(downcompleted + diff, 100) });
+            await _this.setState({ downcompleted: Math.min(downcompleted + diff, 100) });
             await _this.setState({
                 downloading: true
             })
@@ -183,11 +183,12 @@ class List extends React.Component {
         this.downtimer = setInterval(progress, 50);
     }
     downprogressend = async () => {
-        this.setState({ downcompleted: 100 });
+        await this.setState({ downcompleted: 100 });
         clearInterval(this.downtimer);
         await this.setState({
             downloading: false
         })
+        await this.setState({ downcompleted: 0 });
 
     }
     //上拉进度
@@ -195,10 +196,10 @@ class List extends React.Component {
         let _this = this
         async function progress() {
             const { upcompleted } = _this.state;
-            _this.setState({ upcompleted: 0 });
+            await _this.setState({ upcompleted: 0 });
             const diff = Math.random() * 10;
             console.log(diff)
-            _this.setState({ upcompleted: Math.min(upcompleted + diff, 100) });
+            await _this.setState({ upcompleted: Math.min(upcompleted + diff, 100) });
             await _this.setState({
                 uploading: true
             })
@@ -212,6 +213,7 @@ class List extends React.Component {
         await this.setState({
             uploading: false
         })
+        await this.setState({ upcompleted: 0 });
 
     }
     render() {

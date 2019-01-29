@@ -68,7 +68,7 @@ class Recent extends React.Component {
             method: 'post',
             url: 'getFriend',
             data: {
-                searchId: JSON.parse(localStorage.userInfo).user_id
+                user_id: JSON.parse(localStorage.userInfo).user_id
             }
         });
         if (data.code == 1) {

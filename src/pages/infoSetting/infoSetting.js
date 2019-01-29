@@ -18,6 +18,7 @@ import moment from 'moment';
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField';
 import { withSnackbar } from 'notistack';
+import ImageCompressor from 'image-compressor.js'
 
 const styles = theme => ({
     button: {
@@ -125,30 +126,39 @@ class InfoSetting extends PureComponent {
     //设置
     set = async () => {
 
-        
+
         if (this.user_nameblur()) {
-            var formData = new FormData();
-            formData.append("user_id", JSON.parse(localStorage.userInfo).user_id);
-            formData.append("user_name", this.state.user_name);
-            formData.append("user_email", this.state.user_email);
-            formData.append("user_profile_photo", this.state.user_profile_photo);
-            formData.append("user_birthday", moment(this.state.user_birthday).format('YYYY-MM-DD'));
-            formData.append("user_age", this.state.user_age ? this.state.user_age : 0);
-            formData.append("motto", this.state.motto);
-            formData.append("user_nickname", this.state.user_nickname);
-
-
-            let data = await axios({
-                method: 'post',
-                url: 'updateUserInfo',
-                data: formData
+            new ImageCompressor(this.state.user_profile_photo, {
+                quality: 0,
+                success: async (result) => {
+                    var formData = new FormData();
+                    formData.append("user_id", JSON.parse(localStorage.userInfo).user_id);
+                    formData.append("user_name", this.state.user_name);
+                    formData.append("user_email", this.state.user_email);
+                    formData.append("user_profile_photo", result);
+                    formData.append("user_birthday", moment(this.state.user_birthday).format('YYYY-MM-DD'));
+                    formData.append("user_age", this.state.user_age ? this.state.user_age : 0);
+                    formData.append("motto", this.state.motto);
+                    formData.append("user_nickname", this.state.user_nickname);
+                    let data = await axios({
+                        method: 'post',
+                        url: 'updateUserInfo',
+                        data: formData
+                    });
+                    if (data.code == 1) {
+                        localStorage.userInfo = JSON.stringify(data.result.userInfo)
+                        this.enqueueSnackbar('更新成功', 'success')
+                    } else {
+                        this.enqueueSnackbar('更新失败', 'error')
+                    }
+                },
+                error(e) {
+                    console.log(e.message);
+                },
             });
-            if (data.code == 1) {
-                localStorage.userInfo = JSON.stringify(data.result.userInfo)
-                this.enqueueSnackbar('更新成功', 'success')
-            } else {
-                this.enqueueSnackbar('更新失败', 'error')
-            }
+
+
+
         }
     }
     getDetail = async () => {

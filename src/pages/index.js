@@ -84,7 +84,7 @@ class Index extends React.Component {
       <div className='index'>
         <SwipeableViews index={value} onChangeIndex={this.handleChangeIndex} style={{ height: '100%' }}>
           <div style={Object.assign({}, styles.slide)}><Category></Category></div>
-          <div style={Object.assign({}, styles.slide)}><Message></Message></div>
+          {/* <div style={Object.assign({}, styles.slide)}><Message></Message></div> */}
           <div style={Object.assign({}, styles.slide)}><Friends></Friends></div>
           <div style={Object.assign({}, styles.slide)}><Find></Find></div>
           <div style={Object.assign({}, styles.slide)}><User></User></div>
@@ -95,9 +95,14 @@ class Index extends React.Component {
           onChange={this.handleChange}
           className={classes.root}
           showLabels
+          style={{
+            position: 'absolute',
+            bottom: 0
+
+          }}
         >
           <BottomNavigationAction label="首页" icon={<i className='iconfont icon-home-fill'></i>} className={classes.tab} />
-          <BottomNavigationAction label="消息" icon={<i className='iconfont icon-xiaoxi'></i>} className={classes.tab} />
+          {/* <BottomNavigationAction label="消息" icon={<i className='iconfont icon-xiaoxi'></i>} className={classes.tab} /> */}
           <BottomNavigationAction label="好友" icon={<i className='iconfont icon-tianchongxing-'></i>} className={classes.tab} />
           <BottomNavigationAction label="发现" icon={<i className='iconfont icon-faxian'></i>} className={classes.tab} />
           <BottomNavigationAction label="我的" icon={<i className='iconfont icon-wode'></i>} className={classes.tab} />

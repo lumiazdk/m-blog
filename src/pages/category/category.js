@@ -15,10 +15,11 @@ import Dialog from '@material-ui/core/Dialog';
 import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
 import postDetail from '../postDetail/postDetail.js'
-function TabContainer(props) {
+import SwipeableViews from 'react-swipeable-views';
+function TabContainer({ children, dir }) {
     return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
-            {props.children}
+        <Typography component="div" dir={dir} style={{ height: '100%', position: 'relative' }}>
+            {children}
         </Typography>
     );
 }
@@ -59,6 +60,9 @@ class Category extends React.Component {
         this.setState({ value });
         console.log(22)
     };
+    handleChangeIndex = index => {
+        this.setState({ value: index });
+      };
     //获取分类
     getCategory = () => {
         let data = axios({
@@ -70,7 +74,7 @@ class Category extends React.Component {
         return data
     }
     render() {
-        const { classes } = this.props;
+        const { classes, theme } = this.props;
         const { value } = this.state;
         return (
             <div className={classes.root}>
@@ -104,11 +108,17 @@ class Category extends React.Component {
                         {this.state.categorylist.map(item => (<Tab label={item.name} key={item.categoryId} />))}
                     </Tabs>
                 </AppBar>
-                {value == 0 && <List categoryId='all'></List>}
-                {this.state.categorylist.map((item, k) => (<React.Fragment key={item.categoryId}>
-                    {value == k + 1 && <List categoryId={item.categoryId}></List>}
-                </React.Fragment>))}
-
+                <SwipeableViews
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={this.state.value}
+                    onChangeIndex={this.handleChangeIndex}
+                    style={{ height: '100%' }}
+                >
+                    <TabContainer dir={theme.direction}><List categoryId='all'></List></TabContainer>
+                    {this.state.categorylist.map((item, k) => (<TabContainer dir={theme.direction} key={item.categoryId}>
+                        <List categoryId={item.categoryId}></List>
+                    </TabContainer>))}
+                </SwipeableViews>
             </div>
         );
     }
@@ -118,4 +128,4 @@ Category.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Category);
+export default withStyles(styles, { withTheme: true })(Category);

@@ -1,3 +1,9 @@
-.fathername {
-  color: #f50057;
+.postDetail {
+  top: 56px;
+  position: absolute;
+  overflow: hidden;
+  bottom: 9px;
+  .fathername {
+    color: #f50057;
+  }
 }

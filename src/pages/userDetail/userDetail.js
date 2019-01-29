@@ -13,6 +13,17 @@ import axios from 'axios'
 import moment from 'moment'
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Slide from '@material-ui/core/Slide';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import SendMessage from '../sendMessage/sendMessage.js'
+
+function Transition(props) {
+    return <Slide direction="left" {...props} />;
+}
 const styles = theme => ({
     card: {
         maxWidth: 400,
@@ -44,16 +55,34 @@ class UserDetail extends React.Component {
         user_name: '',
         user_email: '',
         user_profile_photo: '',
-        user_birthday: moment(),
+        user_birthday: '',
         user_age: '',
         user_nickname: '',
         motto: '',
-        status: this.props.status
+        status: this.props.status,
+        open: false,//page
+        title: '详情',
+        item: {
+            user_name: '',
+            friend_id: '',
+            user_profile_photo: ''
+        }
 
     };
     componentDidMount() {
         this.getDetail()
     }
+    //子页
+    handleClickOpen = () => {
+        this.setState({
+            open: true
+
+        });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
     getDetail = async () => {
         let data = await axios({
             method: 'post',
@@ -71,6 +100,13 @@ class UserDetail extends React.Component {
             this.setState(() => ({ user_age: result['user_age'] ? result['user_age'] : '' }))
             this.setState(() => ({ user_nickname: result['user_nickname'] ? result['user_nickname'] : '' }))
             this.setState(() => ({ motto: result['motto'] ? result['motto'] : '' }))
+            this.setState({
+                item: {
+                    user_name: result.user_name,
+                    friend_id: this.props.friend_id,
+                    user_profile_photo: result.user_profile_photo
+                }
+            })
         }
     }
     sure = async () => {
@@ -105,6 +141,10 @@ class UserDetail extends React.Component {
                 status: 1
             })
         }
+    }
+    toSendMessage = async () => {
+        this.handleClickOpen()
+
     }
     render() {
         const { classes } = this.props;
@@ -148,8 +188,7 @@ class UserDetail extends React.Component {
                         <ListItemText primary={this.state.user_email} />
                     </ListItem>}
                 </List>
-
-                {this.state.status == 0 && <Grid
+                {this.state.status == 0 && this.props.request_id != JSON.parse(localStorage.userInfo).user_id && <Grid
                     container
                     direction="row-reverse"
                     justify="center"
@@ -171,6 +210,32 @@ class UserDetail extends React.Component {
                 </Grid>}
 
                 {this.state.status == 2 && <div style={{ textAlign: 'center', padding: '10px', color: "red" }}>已拒绝</div>}
+                {this.state.status == 1 && <div style={{ textAlign: 'center', padding: '10px', color: "red" }}>
+                    <Button variant="outlined" className={classes.button} onClick={this.toSendMessage}>
+                        发送信息
+                    </Button>
+                </div>}
+                {/* 子页 */}
+                <Dialog
+                    fullScreen
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    TransitionComponent={Transition}
+                >
+                    <AppBar className={classes.appBar} position='static'>
+                        <Toolbar>
+                            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                                <i className='iconfont icon-back'></i>
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" className={classes.grow}>
+                                {this.state.title}
+                            </Typography>
+                        </Toolbar>
+
+                    </AppBar>
+                    {this.state.open == true && <SendMessage {...this.state.item} handleClose={this.handleClose.bind(this)}></SendMessage>}
+
+                </Dialog>
             </Card>
         );
     }

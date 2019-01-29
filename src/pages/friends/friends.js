@@ -43,7 +43,7 @@ import { withSnackbar } from 'notistack';
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div">
       {props.children}
     </Typography>
   );
@@ -79,6 +79,7 @@ const styles = theme => ({
     position: 'absolute',
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 3,
+    zIndex: 10
   },
   search: {
     position: 'relative',
@@ -169,7 +170,7 @@ class Friends extends React.Component {
   };
   //获取好友
   getFriends = async (event) => {
-    if ((/^1[34578]\d{9}$/.test(event.currentTarget.value))) {
+    if ((/^1[34578]\d{9}$/.test(event.currentTarget.value))&&(event.currentTarget.value!=(localStorage.userInfo).user_telephone_number)) {
       let data = await axios({
         method: 'post',
         url: 'getUsers',
@@ -196,6 +197,7 @@ class Friends extends React.Component {
   surehandleClose = () => {
     this.setState({ sureopen: false });
   };
+  //添加好友
   sureadd = async () => {
     let data = await axios({
       method: 'post',

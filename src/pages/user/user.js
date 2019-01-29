@@ -28,6 +28,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import './addPost.scss'
 import E from 'wangeditor'
 import Select from '@material-ui/core/Select';
+import ImageCompressor from 'image-compressor.js'
 const options = [
     {
         k: 'addPost',
@@ -263,6 +264,7 @@ class User extends React.Component {
     }
     send = async () => {
         let { title, content, describes, background, cid } = this.state
+        let _this = this
         if (this.titleblur() && this.describesblur() && this.cidblur()) {
             if (this.state.background == '') {
                 this.enqueueSnackbar('请选择背景图片', 'error')
@@ -272,24 +274,34 @@ class User extends React.Component {
                 this.enqueueSnackbar('请书写文章', 'error')
                 return
             }
-            var formData = new FormData();
-            formData.append('title', title)
-            formData.append('aid', this.state.userInfo.user_id)
-            formData.append('content', content)
-            formData.append('cid', cid)
-            formData.append('describes', describes)
-            formData.append('background', background)
-            let data = await axios({
-                method: 'post',
-                url: 'addPost',
-                data: formData
-            });
-            if (data.code == 1) {
-                this.enqueueSnackbar('添加成功', 'success')
+            new ImageCompressor(background, {
+                quality: 0,
+                success: async (result) => {
+                    let formData = new FormData();
+                    formData.append('title', title)
+                    formData.append('aid', this.state.userInfo.user_id)
+                    formData.append('content', content)
+                    formData.append('cid', cid)
+                    formData.append('describes', describes)
+                    formData.append('background', result)
+                    let data = await axios({
+                        method: 'post',
+                        url: 'addPost',
+                        data: formData
+                    });
+                    if (data.code == 1) {
+                        this.enqueueSnackbar('添加成功', 'success')
 
-            } else {
-                this.enqueueSnackbar(data.message, 'error')
-            }
+                    } else {
+                        this.enqueueSnackbar(data.message, 'error')
+                    }
+                },
+                error(e) {
+                    console.log(e.message);
+                },
+            });
+
+
         }
     }
     //图片
