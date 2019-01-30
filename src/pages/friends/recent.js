@@ -24,6 +24,8 @@ import SendMessage from '../sendMessage/sendMessage.js'
 import Swiper from 'swiper'
 import './recent.scss'
 import Badge from '@material-ui/core/Badge';
+import moment from 'moment'
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -50,7 +52,8 @@ class Recent extends React.Component {
         },
         chatList: [],
         isDetail: false,
-        ischat: false
+        ischat: false,
+        is_readnum: 0
     }
     componentDidMount() {
         const _this = this
@@ -73,12 +76,16 @@ class Recent extends React.Component {
                 this.getChat()
             }
         })
+        global.socket.on('getFriendRequest', () => {
+            if (this.refs.chat) {
+                this.getnewfriend()
+            }
+        })
     }
     //子页
     handleClickOpen = () => {
         this.setState({
             open: true
-
         });
     };
 
@@ -100,9 +107,15 @@ class Recent extends React.Component {
         });
         if (data.code == 1) {
             this.setState({
-                newfriendList: data.result.result
+                newfriendList: data.result.result,
+                is_readnum: data.result.is_readnum
             })
         }
+    }
+    //子页传入方法
+    closePage = () => {
+        this.getnewfriend()
+        this.handleClose()
     }
     //获取聊天
     getChat = async () => {
@@ -125,8 +138,7 @@ class Recent extends React.Component {
         this.setState({
             item: item,
             isDetail: true,
-            isChat: false
-
+            isChat: false,
         })
         this.handleClickOpen()
     }
@@ -136,7 +148,8 @@ class Recent extends React.Component {
             item: {
                 user_id: item.user_id,
                 friend_id: item.friend_id,
-                user_profile_photo: item.friendInfo.user_profile_photo
+                user_profile_photo: item.friendInfo.user_profile_photo,
+                user_name: item.friendInfo.user_name
             },
             isChat: true,
             isDetail: false
@@ -154,8 +167,10 @@ class Recent extends React.Component {
                     <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
                         <List className={classes.root} >
                             <ListItem button onClick={this.nfhandleClick}>
-                                <Avatar src='/img/nf.png'>
-                                </Avatar>
+                                <Badge className={classes.margin} badgeContent={this.state['is_readnum']} color="secondary">
+                                    <Avatar src='/img/nf.png'>
+                                    </Avatar>
+                                </Badge>
                                 <ListItemText inset primary="新的好友" />
                                 {this.state.nfopen ? <ExpandLess /> : <ExpandMore />}
                             </ListItem>
@@ -163,22 +178,27 @@ class Recent extends React.Component {
                                 <List component="div">
                                     {this.state.newfriendList.map((item, k) =>
                                         <ListItem button className={classes.nested} onClick={this.toDetail.bind(this, item)} key={k}>
-                                            <Avatar src={item.friend.user_profile_photo}>
-                                            </Avatar>
+                                            {item.request_id == JSON.parse(localStorage.userInfo).user_id &&
+                                                <Avatar src={item.friend.user_profile_photo}>
+                                                </Avatar>}
+                                            {item.request_id != JSON.parse(localStorage.userInfo).user_id && <Badge className={classes.margin} badgeContent={item.is_read} color="secondary">
+                                                <Avatar src={item.friend.user_profile_photo}>
+                                                </Avatar>
+                                            </Badge>}
                                             {item.status == 0 && <ListItemText primary={item.friend.user_name} secondary="待同意" />}
                                             {item.status == 1 && <ListItemText primary={item.friend.user_name} secondary="已同意" />}
                                             {item.status == 2 && <ListItemText primary={item.friend.user_name} secondary="已拒绝" />}
-                                            <ListItemSecondaryAction>
+                                            {/* <ListItemSecondaryAction>
                                                 <IconButton className={classes.button} aria-label="Delete">
                                                     <DeleteIcon />
                                                 </IconButton>
-                                            </ListItemSecondaryAction>
+                                            </ListItemSecondaryAction> */}
                                         </ListItem>
                                     )}
 
                                 </List>
                             </Collapse>
-                            <ListItem>
+                            {/* <ListItem>
                                 <Avatar>
                                     <ImageIcon />
                                 </Avatar>
@@ -186,15 +206,16 @@ class Recent extends React.Component {
                             </ListItem>
                             <li>
                                 <Divider variant="inset" />
-                            </li>
+                            </li> */}
                             {/* 聊天 */}
                             <List className={classes.root} ref='chat'>
-                                {this.state.chatList.map(item => <ListItem onClick={this.toChat.bind(this, item)} key={item.id}>
+                                {this.state.chatList.map(item => <ListItem onClick={this.toChat.bind(this, item)} key={item.id} className='chatItem'>
                                     <Badge className={classes.margin} badgeContent={item.message_num} color="secondary">
                                         <Avatar src={item.friendInfo.user_profile_photo}>
                                         </Avatar>
                                     </Badge>
                                     <ListItemText primary={item.friendInfo.user_name} secondary={item.last_message} />
+                                    <div className='chatTime'>{moment(item.chatTime).fromNow()}</div>
                                 </ListItem>)}
                             </List>
                             {/* 子页 */}
@@ -204,18 +225,7 @@ class Recent extends React.Component {
                                 onClose={this.handleClose}
                                 TransitionComponent={Transition}
                             >
-                                <AppBar className={classes.appBar} position='static'>
-                                    <Toolbar>
-                                        <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                                            <i className='iconfont icon-back'></i>
-                                        </IconButton>
-                                        <Typography variant="h6" color="inherit" className={classes.grow}>
-                                            {this.state.title}
-                                        </Typography>
-                                    </Toolbar>
-
-                                </AppBar>
-                                {this.state.open == true && this.state.isDetail == true && <UserDetail {...this.state.item}></UserDetail>}
+                                {this.state.open == true && this.state.isDetail == true && <UserDetail {...this.state.item} closePage={this.closePage.bind(this)}></UserDetail>}
                                 {this.state.open == true && this.state.isChat == true && <SendMessage {...this.state.item} handleClose={this.handleClose.bind(this)} getChat={this.getChat.bind(this)}></SendMessage>}
                             </Dialog>
                         </List>

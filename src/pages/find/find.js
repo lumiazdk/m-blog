@@ -4,7 +4,7 @@ import Animated from 'animated/lib/targets/react-dom';
 const styles = {
   root: {
     background: '##fff',
-    padding: '10px 10px',
+    // padding: '10px 10px',
   },
   slide: {
     color: '#fff',
@@ -14,7 +14,7 @@ const styles = {
     display: 'flex',
   },
   img: {
-    width: '90%',
+    width: '100%',
     height: 144,
     display: 'block',
     marginBottom: 16,

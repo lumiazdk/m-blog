@@ -62,7 +62,7 @@ class Category extends React.Component {
     };
     handleChangeIndex = index => {
         this.setState({ value: index });
-      };
+    };
     //获取分类
     getCategory = () => {
         let data = axios({
@@ -78,31 +78,12 @@ class Category extends React.Component {
         const { value } = this.state;
         return (
             <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center"
-                        >
-                            <Avatar alt="Remy Sharp" src={this.state.userInfo.user_profile_photo} className={classes.avatar} />
-                            <Typography variant="h6" color="inherit">
-                                首页
-                            </Typography>
-                            <IconButton className={classes.button} aria-label="Delete" ><i className='iconfont icon-sousuo'></i></IconButton>
-                        </Grid>
-
-                    </Toolbar>
-                </AppBar>
-                <AppBar position="static" color="default">
+                <AppBar position="absolute">
                     <Tabs
                         value={value}
                         onChange={this.handleChange}
                         variant="scrollable"
                         scrollButtons="on"
-                        indicatorColor="primary"
-                        textColor="primary"
                     >
                         <Tab label='全部' key='all' />
                         {this.state.categorylist.map(item => (<Tab label={item.name} key={item.categoryId} />))}

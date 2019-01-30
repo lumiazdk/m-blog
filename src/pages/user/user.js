@@ -274,32 +274,25 @@ class User extends React.Component {
                 this.enqueueSnackbar('请书写文章', 'error')
                 return
             }
-            new ImageCompressor(background, {
-                quality: 0,
-                success: async (result) => {
-                    let formData = new FormData();
-                    formData.append('title', title)
-                    formData.append('aid', this.state.userInfo.user_id)
-                    formData.append('content', content)
-                    formData.append('cid', cid)
-                    formData.append('describes', describes)
-                    formData.append('background', result)
-                    let data = await axios({
-                        method: 'post',
-                        url: 'addPost',
-                        data: formData
-                    });
-                    if (data.code == 1) {
-                        this.enqueueSnackbar('添加成功', 'success')
 
-                    } else {
-                        this.enqueueSnackbar(data.message, 'error')
-                    }
-                },
-                error(e) {
-                    console.log(e.message);
-                },
+            let formData = new FormData();
+            formData.append('title', title)
+            formData.append('aid', this.state.userInfo.user_id)
+            formData.append('content', content)
+            formData.append('cid', cid)
+            formData.append('describes', describes)
+            formData.append('background', background)
+            let data = await axios({
+                method: 'post',
+                url: 'addPost',
+                data: formData
             });
+            if (data.code == 1) {
+                this.enqueueSnackbar('添加成功', 'success')
+
+            } else {
+                this.enqueueSnackbar(data.message, 'error')
+            }
 
 
         }
@@ -315,10 +308,19 @@ class User extends React.Component {
             this.setState({
                 imgPath: e.target.result
             });
-            this.setState({
-                background: file
-            });
+
         }.bind(this);
+        new ImageCompressor(file, {
+            quality: 0.6,
+            success: async (result) => {
+                this.setState({
+                    background: result
+                });
+            },
+            error(e) {
+                console.log(e.message);
+            },
+        });
     }
     render() {
         const { classes, theme } = this.props;

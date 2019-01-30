@@ -170,7 +170,7 @@ class Friends extends React.Component {
   };
   //获取好友
   getFriends = async (event) => {
-    if ((/^1[34578]\d{9}$/.test(event.currentTarget.value))&&(event.currentTarget.value!=(localStorage.userInfo).user_telephone_number)) {
+    if ((/^1[34578]\d{9}$/.test(event.currentTarget.value)) && (event.currentTarget.value != JSON.parse(localStorage.userInfo).user_telephone_number)) {
       let data = await axios({
         method: 'post',
         url: 'getUsers',
@@ -205,7 +205,8 @@ class Friends extends React.Component {
       data: {
         user_id: JSON.parse(localStorage.userInfo).user_id,
         friend_id: this.state.user_id,
-        status: 0
+        status: 0,
+        request_id: JSON.parse(localStorage.userInfo).user_id
       }
     });
     if (data.code == 1) {
@@ -225,22 +226,20 @@ class Friends extends React.Component {
         <Fab color="secondary" className={classes.absolute}>
           <AddIcon onClick={this.addfriendopen} />
         </Fab>
-        <AppBar position="static" color="default">
+        <AppBar position="absolute">
           <Tabs
             value={this.state.value}
             onChange={this.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
             centered
           >
             <Tab value="one" label="最近" />
             <Tab value="two" label="好友" />
-            <Tab value="three" label="群组" />
+            {/* <Tab value="three" label="群组" /> */}
           </Tabs>
         </AppBar>
         {value === 'one' && <TabContainer><Recent></Recent></TabContainer>}
         {value === 'two' && <TabContainer><FriendList></FriendList></TabContainer>}
-        {value === 'three' && <TabContainer><Rooms></Rooms></TabContainer>}
+        {/* {value === 'three' && <TabContainer><Rooms></Rooms></TabContainer>} */}
         {/* 添加好友 */}
         <Dialog
           fullScreen

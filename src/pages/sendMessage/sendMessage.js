@@ -35,6 +35,7 @@ class SendMessage extends React.Component {
         messageList: [],
         swiper: '',
 
+
     }
     async componentDidMount() {
         console.log(this.props.handleClose)
@@ -60,7 +61,7 @@ class SendMessage extends React.Component {
             let getChatId = await this.getChatId()
             if (getChatId.length > 0) {
                 await this.setState({
-                    chat_id: getChatId.result.chat[0].id
+                    chat_id: getChatId.result.chat[0].id,
                 })
             } else {
                 let addChat = await this.addChat()

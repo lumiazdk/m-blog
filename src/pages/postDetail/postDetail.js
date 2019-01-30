@@ -49,7 +49,7 @@ const styles = theme => ({
 
 class PostDetail extends React.Component {
     state = {
-        detail: {},
+        detail: this.props.item,
         open: false,
         isReply: false,
         replyName: '',
@@ -71,28 +71,11 @@ class PostDetail extends React.Component {
             }
 
         });
-        this.setState({
+        await this.setState({
             swiper
         })
-        const { id } = this.props
-        let data = await axios({
-            method: 'post',
-            url: 'getPost',
-            data: {
-                page: 1,
-                pageSize: 10,
-                user_id: JSON.parse(localStorage.userInfo).user_id,
-                where: {
-                    id: id
-                }
-            }
-        });
-        if (data.code == 1) {
-            await this.setState({
-                detail: data.result.result[0]
-            })
-            this.state.swiper.update()
-        }
+        this.state.swiper.update()
+
         //获取评论
         this.getComment()
         //获取赞
@@ -124,6 +107,7 @@ class PostDetail extends React.Component {
         if (data.code == 1) {
             if (item.isfabulous) {
                 item.fabulous_num = item.fabulous_num - 1
+
             } else {
                 item.fabulous_num = item.fabulous_num + 1
 
@@ -177,7 +161,8 @@ class PostDetail extends React.Component {
         });
         if (data.code == 1) {
             await this.setState({
-                commentList: data.result.result
+                commentList: data.result.result,
+                detail: { ...this.state.detail, ...{ comment_num: data.result.result.length } }
             })
             this.state.swiper.update()
         }
@@ -213,132 +198,150 @@ class PostDetail extends React.Component {
     commentChange = (event) => {
         this.setState({ comment: event.target.value });
     }
+    //返回
+    pagehandleClose = () => {
+        this.props.fresh(this.state.detail)
+    }
     render() {
         const { classes } = this.props;
         const { detail } = this.state;
         const name = (<span>回复:{this.state.replyName}</span>)
         return (
-            <div ref='wrapper' className='wrapper postDetail'>
-                <div className="swiper-wrapper" ref='swiperwrapper'>
-                    <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
-                        <div className={classes.root}>
-                            <Dialog
-                                open={this.state.open}
-                                onClose={this.handleClose}
-                                aria-labelledby="form-dialog-title"
-                            >
-                                <DialogContent>
-                                    <DialogContentText>
-                                        {this.state.isReply && name}
-                                    </DialogContentText>
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        id="name"
-                                        label="评论"
-                                        type="text"
-                                        fullWidth
-                                        onChange={this.commentChange}
-                                        value={this.state.comment}
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={this.handleClose} color="primary">
-                                        取消
-                        </Button>
-                                    <Button onClick={this.handleClose} color="primary" onClick={this.addComment}>
-                                        回复
-                        </Button>
-                                </DialogActions>
-                            </Dialog>
-                            <Paper className={classes.paper} elevation={1}>
-                                <Typography variant="h5" component="span" >
-                                    <span dangerouslySetInnerHTML={{ __html: detail.content }}></span>
-                                </Typography>
-                                <Grid container spacing={24}>
-                                    <Grid item xs={3}>
-                                        <Button color={detail.isfabulous ? 'secondary' : 'default'} className={classes.button} onClick={this.addfabulous.bind(this, detail)}>
-                                            <i className='iconfont icon-like-b'></i>
-                                            <Typography component="span" style={{ marginLeft: '10px' }} color={detail.isfabulous ? 'secondary' : 'default'}>
-                                                {detail.fabulous_num}
-                                            </Typography>
-                                        </Button>
-                                    </Grid>
-
-                                    <Grid item xs={3}>
-                                        <Button className={classes.button} onClick={this.handleClickOpen.bind(this, false)}>
-                                            <i className='iconfont icon-xiaoxi'></i>
-                                            <Typography component="span" style={{ marginLeft: '10px' }}>
-                                                {this.state.commentList.length}
-                                            </Typography>
-                                        </Button>
-                                    </Grid>
-
-                                    <Grid item xs={3}>
-                                        <Button className={classes.button}>
-                                            <i className='iconfont icon-zhuanfa'></i>
-                                            <Typography component="span" style={{ marginLeft: '10px' }}>
-                                                0
+            <React.Fragment>
+                <AppBar className={classes.appBar} position='static'>
+                    <Toolbar>
+                        <IconButton color="inherit" onClick={this.pagehandleClose} aria-label="Close">
+                            <i className='iconfont icon-back'></i>
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" className={classes.grow}>
+                            博文详情
                             </Typography>
-                                        </Button>
-                                    </Grid>
+                    </Toolbar>
 
-                                    <Grid item xs={3}>
-                                        <Button className={classes.button}>
-                                            <i className='iconfont icon-chakan'></i>
-                                            <Typography component="span" style={{ marginLeft: '10px' }}>
-                                                0
-                            </Typography>
-                                        </Button>
-                                    </Grid>
-
-                                </Grid>
-
-                                <Grid container spacing={24}>
-                                    {this.state.fabulousList.slice(0, 9).map((item, k) =>
-                                        <Grid item key={k}>
-                                            <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
-                                        </Grid>)}
-
-                                </Grid>
-                                <Typography gutterBottom variant="subtitle1" style={{ marginTop: '10px' }}>
-                                    回帖({this.state.commentList.length})
-                        <Divider />
-                                </Typography>
-                                {this.state.commentList.map((item, k) => <Grid container spacing={8} style={{ marginBottom: '10px' }} key={k}>
-                                    <Grid item xs={2}>
-                                        <ButtonBase className={classes.image}>
-                                            <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
-                                        </ButtonBase>
-                                    </Grid>
-                                    <Grid item xs={10} sm container style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.54)' }}>
-                                        <Grid item xs container direction="column" spacing={16}>
-                                            <Grid item xs>
-                                                <Typography gutterBottom variant="subtitle1">
-                                                    {item.userInfo.user_name}
+                </AppBar>
+                <div ref='wrapper' className='wrapper postDetail'>
+                    <div className="swiper-wrapper" ref='swiperwrapper'>
+                        <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
+                            <div className={classes.root}>
+                                <Dialog
+                                    open={this.state.open}
+                                    onClose={this.handleClose}
+                                    aria-labelledby="form-dialog-title"
+                                >
+                                    <DialogContent>
+                                        <DialogContentText>
+                                            {this.state.isReply && name}
+                                        </DialogContentText>
+                                        <TextField
+                                            autoFocus
+                                            margin="dense"
+                                            id="name"
+                                            label="评论"
+                                            type="text"
+                                            fullWidth
+                                            onChange={this.commentChange}
+                                            value={this.state.comment}
+                                        />
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={this.handleClose} color="primary">
+                                            取消
+                        </Button>
+                                        <Button onClick={this.handleClose} color="primary" onClick={this.addComment}>
+                                            回复
+                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+                                <Paper className={classes.paper} elevation={1}>
+                                    <Typography variant="h5" component="span" >
+                                        <span dangerouslySetInnerHTML={{ __html: detail.content }}></span>
+                                    </Typography>
+                                    <Grid container spacing={24}>
+                                        <Grid item xs={3}>
+                                            <Button color={detail.isfabulous ? 'secondary' : 'default'} className={classes.button} onClick={this.addfabulous.bind(this, detail)}>
+                                                <i className='iconfont icon-like-b'></i>
+                                                <Typography component="span" style={{ marginLeft: '10px' }} color={detail.isfabulous ? 'secondary' : 'default'}>
+                                                    {detail.fabulous_num}
                                                 </Typography>
-                                                <Typography color="textSecondary">{k + 1}楼</Typography>
-                                                <Typography gutterBottom>{item.fatherInfo && <span className='fathername'>@{item.fatherInfo.user_name}&nbsp;</span>}{item.content}</Typography>
+                                            </Button>
+                                        </Grid>
 
+                                        <Grid item xs={3}>
+                                            <Button className={classes.button} onClick={this.handleClickOpen.bind(this, false)}>
+                                                <i className='iconfont icon-xiaoxi'></i>
+                                                <Typography component="span" style={{ marginLeft: '10px' }}>
+                                                    {this.state.commentList.length}
+                                                </Typography>
+                                            </Button>
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            <Button className={classes.button}>
+                                                <i className='iconfont icon-zhuanfa'></i>
+                                                <Typography component="span" style={{ marginLeft: '10px' }}>
+                                                    0
+                            </Typography>
+                                            </Button>
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            <Button className={classes.button}>
+                                                <i className='iconfont icon-chakan'></i>
+                                                <Typography component="span" style={{ marginLeft: '10px' }}>
+                                                    0
+                            </Typography>
+                                            </Button>
+                                        </Grid>
+
+                                    </Grid>
+
+                                    <Grid container spacing={24}>
+                                        {this.state.fabulousList.slice(0, 9).map((item, k) =>
+                                            <Grid item key={k}>
+                                                <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
+                                            </Grid>)}
+
+                                    </Grid>
+                                    <Typography gutterBottom variant="subtitle1" style={{ marginTop: '10px' }}>
+                                        回帖({this.state.commentList.length})
+                        <Divider />
+                                    </Typography>
+                                    {this.state.commentList.map((item, k) => <Grid container spacing={8} style={{ marginBottom: '10px' }} key={k}>
+                                        <Grid item xs={2}>
+                                            <ButtonBase className={classes.image}>
+                                                <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
+                                            </ButtonBase>
+                                        </Grid>
+                                        <Grid item xs={10} sm container style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.54)' }}>
+                                            <Grid item xs container direction="column" spacing={16}>
+                                                <Grid item xs>
+                                                    <Typography gutterBottom variant="subtitle1">
+                                                        {item.userInfo.user_name}
+                                                    </Typography>
+                                                    <Typography color="textSecondary">{k + 1}楼</Typography>
+                                                    <Typography gutterBottom>{item.fatherInfo && <span className='fathername'>@{item.fatherInfo.user_name}&nbsp;</span>}{item.content}</Typography>
+
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography color="textSecondary">{moment(item.create_time).fromNow()}</Typography>
+                                                </Grid>
                                             </Grid>
                                             <Grid item>
-                                                <Typography color="textSecondary">{moment(item.create_time).fromNow()}</Typography>
+                                                <Button color="primary" onClick={this.handleClickOpen.bind(this, true, item)}>
+                                                    回复
+                                </Button>
                                             </Grid>
                                         </Grid>
-                                        <Grid item>
-                                            <Button color="primary" onClick={this.handleClickOpen.bind(this, true, item)}>
-                                                回复
-                                </Button>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>)}
+                                    </Grid>)}
 
-                            </Paper>
+                                </Paper>
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </React.Fragment>
+
 
         );
     }

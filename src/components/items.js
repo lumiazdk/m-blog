@@ -100,15 +100,20 @@ class RecipeReviewCard extends React.Component {
     handleClose = () => {
         this.setState({ anchorEl: null });
     };
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.item != this.props.item) {
-            this.setState({
-                item: this.props.item
-            })
-        }
-        return true;
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (this.state.item != this.props.item) {
+    //         this.setState({
+    //             item: this.props.item
+    //         })
+    //     }
+    //     return true;
+    // }
+    //刷新
+    fresh = (item) => {
+        console.log(item)
+        this.setState({ item })
+        this.pagehandleClose()
     }
-    
     render() {
         const { item, anchorEl } = this.state;
         const { classes } = this.props;
@@ -120,36 +125,36 @@ class RecipeReviewCard extends React.Component {
                         avatar={
                             <Avatar alt="Remy Sharp" src={item.user.user_profile_photo} className={classes.avatar} />
                         }
-                        action={
-                            <div>
-                                <div
-                                    aria-label="More"
-                                    aria-owns={open ? 'long-menu' : undefined}
-                                    aria-haspopup="true"
-                                    onClick={this.handleClick}
-                                >
-                                    <MoreVertIcon />
-                                </div>
-                                <Menu
-                                    id="long-menu"
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={this.handleClose}
-                                    PaperProps={{
-                                        style: {
-                                            maxHeight: ITEM_HEIGHT * 4.5,
-                                            width: 200,
-                                        },
-                                    }}
-                                >
-                                    {options.map(option => (
-                                        <MenuItem key={option.k} selected={option.k === 'guanzhu'} onClick={this.handleClose}>
-                                            {option.name}
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
-                            </div>
-                        }
+                        // action={
+                        //     <div>
+                        //         <div
+                        //             aria-label="More"
+                        //             aria-owns={open ? 'long-menu' : undefined}
+                        //             aria-haspopup="true"
+                        //             onClick={this.handleClick}
+                        //         >
+                        //             <MoreVertIcon />
+                        //         </div>
+                        //         <Menu
+                        //             id="long-menu"
+                        //             anchorEl={anchorEl}
+                        //             open={open}
+                        //             onClose={this.handleClose}
+                        //             PaperProps={{
+                        //                 style: {
+                        //                     maxHeight: ITEM_HEIGHT * 4.5,
+                        //                     width: 200,
+                        //                 },
+                        //             }}
+                        //         >
+                        //             {options.map(option => (
+                        //                 <MenuItem key={option.k} selected={option.k === 'guanzhu'} onClick={this.handleClose}>
+                        //                     {option.name}
+                        //                 </MenuItem>
+                        //             ))}
+                        //         </Menu>
+                        //     </div>
+                        // }
                         title={item.user.user_name}
                         subheader={moment(item.create_time).fromNow()}
                     />
@@ -215,18 +220,8 @@ class RecipeReviewCard extends React.Component {
                     onClose={this.pagehandleClose}
                     TransitionComponent={pageTransition}
                 >
-                    <AppBar className={classes.appBar} position='static'>
-                        <Toolbar>
-                            <IconButton color="inherit" onClick={this.pagehandleClose} aria-label="Close">
-                                <i className='iconfont icon-back'></i>
-                            </IconButton>
-                            <Typography variant="h6" color="inherit" className={classes.grow}>
-                                {this.state.title}
-                            </Typography>
-                        </Toolbar>
 
-                    </AppBar>
-                    {this.state.pageopen == true && <PostDetail id={item.id} ></PostDetail>}
+                    {this.state.pageopen == true && <PostDetail item={item} fresh={this.fresh.bind(this)}></PostDetail>}
                 </Dialog>
             </Card>
         );
