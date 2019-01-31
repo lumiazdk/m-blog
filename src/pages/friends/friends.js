@@ -6,38 +6,29 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import FriendList from './friendsList'
-import Rooms from './rooms.js'
+// import Rooms from './rooms.js'
 import Recent from './recent.js'
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
-import TextField from '@material-ui/core/TextField';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import CommentIcon from '@material-ui/icons/Comment';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import axios from 'axios'
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withSnackbar } from 'notistack';
 
@@ -61,7 +52,7 @@ const afoptions = [
   },
   {
     k: 'follow',
-    name: '关注'
+    // name: '关注'
   }
 ];
 const afITEM_HEIGHT = 48;
@@ -158,7 +149,6 @@ class Friends extends React.Component {
 
   afhandleClose = (k, item) => {
     if (k == 'add') {
-      console.log(k, item)
       this.setState({
         user_id: item.user_id,
         user_name: item.user_name
@@ -238,9 +228,9 @@ class Friends extends React.Component {
             {/* <Tab value="three" label="群组" /> */}
           </Tabs>
         </AppBar>
-        {value === 'one' && <TabContainer><Recent></Recent></TabContainer>}
-        {value === 'two' && <TabContainer><FriendList></FriendList></TabContainer>}
-        {/* {value === 'three' && <TabContainer><Rooms></Rooms></TabContainer>} */}
+        {value == 'one' && <TabContainer><Recent></Recent></TabContainer>}
+        {value == 'two' && <TabContainer><FriendList></FriendList></TabContainer>}
+        {/* {value == 'three' && <TabContainer><Rooms></Rooms></TabContainer>} */}
         {/* 添加好友 */}
         <Dialog
           fullScreen

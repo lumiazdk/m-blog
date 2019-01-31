@@ -6,7 +6,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { withRouter } from 'react-router'
 import axios from 'axios'
 import Paper from '@material-ui/core/Paper';
@@ -172,7 +171,6 @@ class PostDetail extends React.Component {
     }
     //回复
     addComment = async () => {
-        console.log(this.refs.comment)
         let form = {
             post_id: this.state.detail.id,
             user_id: JSON.parse(localStorage.userInfo).user_id,

@@ -81,7 +81,6 @@ class InfoSetting extends PureComponent {
         let file = e.target.files[0]
         reader.readAsDataURL(file);
         reader.onload = function (e) {
-            console.log(e.target.result);  // 上传的图片的编码
             this.setState({
                 imgPath: e.target.result
             });
@@ -95,7 +94,6 @@ class InfoSetting extends PureComponent {
                 });
             },
             error(e) {
-                console.log(e.message);
             },
         });
     }

@@ -8,13 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios'
 import List from './list.js'
 import './category.scss'
-import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
-import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import Toolbar from '@material-ui/core/Toolbar';
-import Slide from '@material-ui/core/Slide';
-import postDetail from '../postDetail/postDetail.js'
 import SwipeableViews from 'react-swipeable-views';
 function TabContainer({ children, dir }) {
     return (
@@ -58,7 +51,6 @@ class Category extends React.Component {
     //tabs
     handleChange = (event, value) => {
         this.setState({ value });
-        console.log(22)
     };
     handleChangeIndex = index => {
         this.setState({ value: index });

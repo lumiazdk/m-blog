@@ -18,7 +18,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
@@ -147,7 +146,6 @@ class User extends React.Component {
     //menu菜单选项
     handleMenuItemClick = async (event, index) => {
         // this.setState({ selectedIndex: index, anchorEl: null });
-        console.log(index)
         if (index == 'addPost') {
             await this.setState({ open: true });
             const elem = this.refs.editorElem
@@ -290,6 +288,7 @@ class User extends React.Component {
             });
             if (data.code == 1) {
                 this.enqueueSnackbar('添加成功', 'success')
+                this.addPosthandleClose()
 
             } else {
                 this.enqueueSnackbar(data.message, 'error')
@@ -305,7 +304,6 @@ class User extends React.Component {
         let file = e.target.files[0]
         reader.readAsDataURL(file);
         reader.onload = function (e) {
-            console.log(e.target.result);  // 上传的图片的编码
             this.setState({
                 imgPath: e.target.result
             });
@@ -319,7 +317,6 @@ class User extends React.Component {
                 });
             },
             error(e) {
-                console.log(e.message);
             },
         });
     }

@@ -1,9 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import BScroll from 'better-scroll'
 import './homeList.scss'
 import Items from '../../components/items.js'
-import { setTimeout } from 'core-js';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios'
@@ -80,7 +77,6 @@ class homeList extends React.Component {
         async function touchEnd() {
             var _viewHeight = _this.refs.swiperwrapper.offsetHeight;
             var _contentHeight = _this.refs.swiperslide.offsetHeight;
-            console.log(_viewHeight, _contentHeight)
             // 上拉加载
             if (swiper.translate <= _viewHeight - _contentHeight - 50 && swiper.translate < 0) {
                 console.log("已经到达底部！");

@@ -4,23 +4,20 @@ import { withStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Swiper from 'swiper'
-import indexStyles from './index.scss'
-import Message from './message/message.js'
 import User from './user/user.js'
 import Category from './category/category.js'
 import Friends from './friends/friends.js'
 import Find from './find/find.js'
 import SwipeableViews from 'react-swipeable-views';
-
 import './icon.scss'
 import axios from 'axios'
 import io from 'socket.io-client';
 import SocketIOClient from './socket.js'
-const socket = io('http://192.168.0.10:8080');
+const ip = '47.244.57.219'
+const socket = io(`http://${ip}:8080`);
 global.socket = socket
 SocketIOClient()
-axios.defaults.baseURL = 'http://192.168.0.10:8080/';
+axios.defaults.baseURL = `http://${ip}:8080/`;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Authorization'] = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyNjY4NDkzMTAsIm5hbWUiOiIxMjMifQ.LohSTredC55QcoNI4g7WF_JwpmACbuPNbRd-MXuDIv0';
 // 添加请求拦截器
@@ -41,7 +38,6 @@ axios.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   return Promise.reject(error);
 });
-console.log(indexStyles)
 const styles = {
   root: {
     position: 'absolute',

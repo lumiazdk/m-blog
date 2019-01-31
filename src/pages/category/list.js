@@ -1,13 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import BScroll from 'better-scroll'
 import './list.scss'
 import Items from '../../components/items.js'
-import { setTimeout } from 'core-js';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios'
-import Button from '@material-ui/core/Button';
 import Swiper from 'swiper'
 const styles = theme => ({
     progress: {
@@ -91,7 +87,6 @@ class List extends React.Component {
         async function touchEnd() {
             var _viewHeight = _this.refs.swiperwrapper.offsetHeight;
             var _contentHeight = _this.refs.swiperslide.offsetHeight;
-            console.log(_viewHeight, _contentHeight)
             // 上拉加载
             if (swiper.translate <= _viewHeight - _contentHeight - 50 && swiper.translate < 0) {
                 console.log("已经到达底部！");
@@ -173,7 +168,6 @@ class List extends React.Component {
             const { downcompleted } = _this.state;
             await _this.setState({ downcompleted: 0 });
             const diff = Math.random() * 10;
-            console.log(diff)
             await _this.setState({ downcompleted: Math.min(downcompleted + diff, 100) });
             await _this.setState({
                 downloading: true
@@ -198,7 +192,6 @@ class List extends React.Component {
             const { upcompleted } = _this.state;
             await _this.setState({ upcompleted: 0 });
             const diff = Math.random() * 10;
-            console.log(diff)
             await _this.setState({ upcompleted: Math.min(upcompleted + diff, 100) });
             await _this.setState({
                 uploading: true
