@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Routers from './routerMap'
 import * as serviceWorker from './serviceWorker';
-import { Switch, BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { Switch, HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import './libs/moment.js'
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';

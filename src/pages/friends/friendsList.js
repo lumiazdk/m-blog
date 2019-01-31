@@ -106,18 +106,7 @@ class FriendsList extends React.Component {
           onClose={this.handleClose}
           TransitionComponent={Transition}
         >
-          <AppBar className={classes.appBar} position='static'>
-            <Toolbar>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <i className='iconfont icon-back'></i>
-              </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.grow}>
-                {this.state.title}
-              </Typography>
-            </Toolbar>
-
-          </AppBar>
-          {this.state.open == true && <UserDetail {...this.state.item}></UserDetail>}
+          {this.state.open == true && <UserDetail {...this.state.item} closePage={this.handleClose.bind(this)} from='friend'></UserDetail>}
         </Dialog>
       </div>
 

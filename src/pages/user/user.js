@@ -178,6 +178,7 @@ class User extends React.Component {
                     content: html
                 })
             }
+
             editor.create()
             this.handleClose()
         }

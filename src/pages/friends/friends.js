@@ -223,9 +223,10 @@ class Friends extends React.Component {
     const afopen = Boolean(afanchorEl);
     return (
       <div className={classes.root} style={{ position: 'relative' }}>
-        <Fab color="secondary" className={classes.absolute}>
+        {this.state.value == 'two' && <Fab color="secondary" className={classes.absolute}>
           <AddIcon onClick={this.addfriendopen} />
-        </Fab>
+        </Fab>}
+
         <AppBar position="absolute">
           <Tabs
             value={this.state.value}

@@ -11,7 +11,7 @@ export default [
     { path: "/", name: "App", component: Index, auth: true },
     { path: "/Login", name: "Login", component: Login, },
     { path: "/InfoSetting", name: "InfoSetting", component: InfoSetting, auth: true },
-    { path: "/PostDetail/:id", name: "PostDetail", component: PostDetail, auth: true },
-    { path: "/SendMessage", name: "SendMessage", component: SendMessage, auth: true },
+    // { path: "/PostDetail/:id", name: "PostDetail", component: PostDetail, auth: true },
+    // { path: "/SendMessage", name: "SendMessage", component: SendMessage, auth: true },
 
 ]

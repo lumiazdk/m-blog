@@ -225,7 +225,7 @@ class Recent extends React.Component {
                                 onClose={this.handleClose}
                                 TransitionComponent={Transition}
                             >
-                                {this.state.open == true && this.state.isDetail == true && <UserDetail {...this.state.item} closePage={this.closePage.bind(this)}></UserDetail>}
+                                {this.state.open == true && this.state.isDetail == true && <UserDetail {...this.state.item} closePage={this.closePage.bind(this)} from='request'></UserDetail>}
                                 {this.state.open == true && this.state.isChat == true && <SendMessage {...this.state.item} handleClose={this.handleClose.bind(this)} getChat={this.getChat.bind(this)}></SendMessage>}
                             </Dialog>
                         </List>

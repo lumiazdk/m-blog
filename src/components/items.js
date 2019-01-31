@@ -197,7 +197,7 @@ class RecipeReviewCard extends React.Component {
                             <Button className={classes.button}>
                                 <i className='iconfont icon-zhuanfa'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }}>
-                                    0
+                                    {item.forward_num}
                             </Typography>
                             </Button>
                         </Grid>
@@ -206,7 +206,7 @@ class RecipeReviewCard extends React.Component {
                             <Button className={classes.button}>
                                 <i className='iconfont icon-chakan'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }}>
-                                    0
+                                    {item.see_num}
                             </Typography>
                             </Button>
                         </Grid>

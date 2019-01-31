@@ -147,17 +147,23 @@ class UserDetail extends React.Component {
 
     }
     closePage = async () => {
-        let data = await axios({
-            method: 'post',
-            url: 'clearFriendBadge',
-            data: {
-                user_id: this.props.user_id,
-                friend_id: this.props.friend_id,
+        if (this.props.from=='request') {
+            let data = await axios({
+                method: 'post',
+                url: 'clearFriendBadge',
+                data: {
+                    user_id: this.props.user_id,
+                    friend_id: this.props.friend_id,
+                }
+            });
+            if (data.code == 1) {
+                this.props.closePage()
             }
-        });
-        if (data.code == 1) {
+        }
+        if(this.props.from=='friend'){
             this.props.closePage()
         }
+
     }
     render() {
         const { classes } = this.props;

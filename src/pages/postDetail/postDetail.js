@@ -56,7 +56,8 @@ class PostDetail extends React.Component {
         comment: '',
         commentList: [],
         fabulousList: [],
-        swiper: ''
+        swiper: '',
+        forwardopen: false
     }
     async componentDidMount() {
         let wrapper = this.refs.wrapper
@@ -80,6 +81,8 @@ class PostDetail extends React.Component {
         this.getComment()
         //获取赞
         this.getfabulous()
+        //获取查看数量
+        this.seePostNum()
 
     }
     //通知
@@ -202,6 +205,60 @@ class PostDetail extends React.Component {
     pagehandleClose = () => {
         this.props.fresh(this.state.detail)
     }
+    //转发
+    forward = async () => {
+        let formData = new FormData();
+        formData.append('title', this.state.detail.title)
+        formData.append('aid', this.state.detail.aid)
+        formData.append('content', this.state.detail.content)
+        formData.append('cid', this.state.detail.cid)
+        formData.append('describes', this.state.detail.describes)
+        formData.append('background', this.state.detail.background)
+        formData.append('postId', this.state.detail.id)
+        formData.append('forward_num', this.state.detail.forward_num)
+        formData.append('type', 1)
+        let data = await axios({
+            method: 'post',
+            url: 'addPost',
+            data: formData
+        });
+        if (data.code == 1) {
+            this.enqueueSnackbar('转发成功', 'success')
+            this.setState({
+                detail: { ...this.state.detail, ...{ forward_num: parseInt(this.state.detail.forward_num) + 1 } }
+            })
+            this.forwardhandleClose()
+
+        } else {
+            this.enqueueSnackbar(data.message, 'error')
+            this.forwardhandleClose()
+
+        }
+    }
+    //转发按钮
+    forwardhandleClickOpen = () => {
+        this.setState({ forwardopen: true });
+    };
+
+    forwardhandleClose = () => {
+        this.setState({ forwardopen: false });
+    };
+    //查看数量
+    seePostNum = async () => {
+        let data = await axios({
+            method: 'post',
+            url: 'seePostNum',
+            data: {
+                id: this.state.detail.id,
+                see_num: this.state.detail.see_num
+            }
+        });
+        if (data.code == 1) {
+            this.setState({
+                detail: { ...this.state.detail, ...{ see_num: data.result.see_num } }
+            })
+        }
+    }
     render() {
         const { classes } = this.props;
         const { detail } = this.state;
@@ -246,10 +303,10 @@ class PostDetail extends React.Component {
                                     <DialogActions>
                                         <Button onClick={this.handleClose} color="primary">
                                             取消
-                        </Button>
+                                        </Button>
                                         <Button onClick={this.handleClose} color="primary" onClick={this.addComment}>
                                             回复
-                        </Button>
+                                        </Button>
                                     </DialogActions>
                                 </Dialog>
                                 <Paper className={classes.paper} elevation={1}>
@@ -276,11 +333,11 @@ class PostDetail extends React.Component {
                                         </Grid>
 
                                         <Grid item xs={3}>
-                                            <Button className={classes.button}>
+                                            <Button className={classes.button} onClick={this.forwardhandleClickOpen}>
                                                 <i className='iconfont icon-zhuanfa'></i>
                                                 <Typography component="span" style={{ marginLeft: '10px' }}>
-                                                    0
-                            </Typography>
+                                                    {this.state.detail.forward_num}
+                                                </Typography>
                                             </Button>
                                         </Grid>
 
@@ -288,8 +345,8 @@ class PostDetail extends React.Component {
                                             <Button className={classes.button}>
                                                 <i className='iconfont icon-chakan'></i>
                                                 <Typography component="span" style={{ marginLeft: '10px' }}>
-                                                    0
-                            </Typography>
+                                                    {this.state.detail.see_num}
+                                                </Typography>
                                             </Button>
                                         </Grid>
 
@@ -304,7 +361,7 @@ class PostDetail extends React.Component {
                                     </Grid>
                                     <Typography gutterBottom variant="subtitle1" style={{ marginTop: '10px' }}>
                                         回帖({this.state.commentList.length})
-                        <Divider />
+                                    <Divider />
                                     </Typography>
                                     {this.state.commentList.map((item, k) => <Grid container spacing={8} style={{ marginBottom: '10px' }} key={k}>
                                         <Grid item xs={2}>
@@ -340,6 +397,23 @@ class PostDetail extends React.Component {
                         </div>
                     </div>
                 </div>
+                <Dialog
+                    open={this.state.forwardopen}
+                    onClose={this.forwardhandleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"确定要转发吗？"}</DialogTitle>
+
+                    <DialogActions>
+                        <Button onClick={this.forwardhandleClose} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={this.forward} color="primary" autoFocus>
+                            确定
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </React.Fragment>
 
 
