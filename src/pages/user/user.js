@@ -73,9 +73,7 @@ const styles = theme => ({
         width: 60,
         height: 60,
     },
-    appBar: {
-        position: 'relative',
-    },
+
     flex: {
         flex: 1,
     },
@@ -148,36 +146,21 @@ class User extends React.Component {
         // this.setState({ selectedIndex: index, anchorEl: null });
         if (index == 'addPost') {
             await this.setState({ open: true });
-            const elem = this.refs.editorElem
-            const editor = new E(elem)
-            editor.customConfig.menus = [
-                'head',//
-                'bold',//
-                'list',  // 列表
-                'justify',  // 对齐方式
-                'image',  // 插入图片
-                'undo',  // 撤销
-            ];
-            //关闭粘贴样式的过滤
-            editor.customConfig.pasteFilterStyle = false;
-            //忽略粘贴内容中的图片
-            editor.customConfig.pasteIgnoreImg = true;
-            // 使用 base64 保存图片
-            editor.customConfig.uploadImgShowBase64 = true;
-            // 隐藏“网络图片”tab
-            editor.customConfig.showLinkImg = false;
-            //改变z-index
-            editor.customConfig.zIndex = 10;
-            // 最大300M
-
-            // 使用 onchange 函数监听内容的变化，并实时更新到 state 中
-            editor.customConfig.onchange = html => {
-                this.setState({
-                    content: html
-                })
-            }
-
-            editor.create()
+            /*实例化一个编辑器*/
+            var artEditor = new window.Eleditor({
+                el: '#article-body',
+                upload: {
+                    server: `http://${global.ip}/upload`,
+                    fileSizeLimit: 2
+                },
+                changer: ()=> {
+                    console.log('内容被编辑了');
+                    console.log(artEditor.getContent())
+                    this.setState({
+                        content: artEditor.getContent()
+                    })
+                }
+            });
             this.handleClose()
         }
         if (index == 'logout') {
@@ -325,14 +308,14 @@ class User extends React.Component {
         const { userInfo, anchorEl } = this.state
         const open = Boolean(anchorEl);
         return (
-            <div >
+            <div className='user'>
                 <Dialog
                     fullScreen
                     open={this.state.open}
                     onClose={this.addPosthandleClose}
                     TransitionComponent={Transition}
                 >
-                    <AppBar className={classes.appBar}>
+                    <AppBar className='appBar'>
                         <Toolbar>
                             <IconButton color="inherit" onClick={this.addPosthandleClose} aria-label="Close">
                                 <i className='iconfont icon-iconfontjiantou'></i>
@@ -395,8 +378,7 @@ class User extends React.Component {
                             </label>
                         </div>
                         <div className='formItem'>
-                            <div ref="editorElem" style={{ textAlign: 'left' }}>
-                            </div>
+                            <div id="article-body" ref="editorElem" ></div>
                         </div>
                     </form>
                 </Dialog>

@@ -74,7 +74,6 @@ class PostDetail extends React.Component {
         await this.setState({
             swiper
         })
-        this.state.swiper.update()
 
         //获取评论
         this.getComment()
@@ -82,7 +81,7 @@ class PostDetail extends React.Component {
         this.getfabulous()
         //获取查看数量
         this.seePostNum()
-
+        swiper.update()
     }
     //通知
     enqueueSnackbar = (text, variant) => {
@@ -308,7 +307,7 @@ class PostDetail extends React.Component {
                                     </DialogActions>
                                 </Dialog>
                                 <Paper className={classes.paper} elevation={1}>
-                                    <Typography variant="h5" component="span" >
+                                    <Typography component="span" className='postContent'>
                                         <span dangerouslySetInnerHTML={{ __html: detail.content }}></span>
                                     </Typography>
                                     <Grid container spacing={24}>

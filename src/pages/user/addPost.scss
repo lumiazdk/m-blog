@@ -10,3 +10,74 @@
 .content {
   padding: 10px;
 }
+#article-body {
+  width: 100%;
+  min-height: 300px;
+  box-sizing: border-box;
+  padding: 10px;
+  color: #444;
+}
+.appBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0 !important;
+}
+.formwrapper {
+  margin-top: 56px;
+}
+#contentEditor {
+  width: 100%;
+  min-height: 300px;
+  box-sizing: border-box;
+  padding: 10px;
+  color: #444;
+}
+#contentEditor p {
+  letter-spacing: 0.25px;
+  font: 16px/25px Tahoma, Verdana, 宋体;
+  margin: 20px 0px;
+}
+#contentEditor h4 {
+  font-weight: bold;
+  line-height: 1.333em;
+  margin: 10px 0 20px;
+  padding: 25px 0 0;
+}
+#contentEditor img {
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}
+.dempTip {
+  border-left: 2px solid #00bcd4;
+  padding-left: 5px;
+  margin: 10px;
+  font-size: 16px;
+}
+code {
+  white-space: pre-wrap;
+  background: #2d2d2d;
+  display: block;
+  margin: 10px;
+  border-radius: 5px;
+  color: #fff;
+}
+.viewTit {
+  color: #ff5722;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  background: #ffeb3b;
+  box-shadow: 0 0 5px;
+}
+.Eleditor-area img {
+  width: 100%;
+}

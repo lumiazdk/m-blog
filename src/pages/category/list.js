@@ -218,10 +218,12 @@ class List extends React.Component {
                 <div className="wrapper" ref='wrapper'>
                     <div className="swiper-wrapper" ref='swiperwrapper'>
                         <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
-                            {this.state.list.length == 0 && <div className='up'>暂无数据</div>}
+                            {this.state.list.length == 0 && <div className='up'>
+                                <img src="/img/no_data.png" alt="" />
+                            </div>}
                             {this.state.list.map((item, k) => (<div className='items' key={k}><Items item={item}></Items></div>))}
                             <div className='down' ref='down'>
-                                {this.state.no_data && this.state.loadingText}
+                                {this.state.no_data && this.state.list.length > 0 && this.state.loadingText}
                             </div>
                             {this.state.uploading && <LinearProgress variant="determinate" value={this.state.upcompleted} color="secondary" />}
                         </div>

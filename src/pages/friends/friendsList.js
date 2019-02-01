@@ -45,6 +45,12 @@ class FriendsList extends React.Component {
 
     });
     this.getFriends()
+    global.socket.on('getFriendRequest', () => {
+      console.log(333)
+      if (this.state.newfriendList) {
+        this.getFriends()
+      }
+    })
   }
   //获取好友
   getFriends = async (event) => {
@@ -80,6 +86,10 @@ class FriendsList extends React.Component {
       <div ref='wrapper' className='wrapper friendsList'>
         <div className="swiper-wrapper" ref='swiperwrapper'>
           <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
+            {this.state.newfriendList.length == 0 && <div className='no_friend'>
+              <img src="/img/no_friend.png" alt="" />
+            </div>}
+
             <List className={classes.root}>
               {this.state.newfriendList.map(item => <React.Fragment key={item.id}>
                 <ListItem onClick={this.handleClickOpen.bind(this, item)}>

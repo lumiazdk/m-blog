@@ -7,17 +7,21 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import User from './user/user.js'
 import Category from './category/category.js'
 import Friends from './friends/friends.js'
-import Find from './find/find.js'
+import './find/find.js'
+import indexStyles from './index.scss'
 import SwipeableViews from 'react-swipeable-views';
 import './icon.scss'
 import axios from 'axios'
 import io from 'socket.io-client';
 import SocketIOClient from './socket.js'
-const ip = '47.244.57.219'
-const socket = io(`http://${ip}:8080`);
+global.ip = '47.244.57.219'
+
+// global.ip = '192.168.0.10'
+global.port = 80
+const socket = io(`http://${global.ip}:${global.port}`);
 global.socket = socket
 SocketIOClient()
-axios.defaults.baseURL = `http://${ip}:8080/`;
+axios.defaults.baseURL = `http://${global.ip}:${global.port}/`;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Authorization'] = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyNjY4NDkzMTAsIm5hbWUiOiIxMjMifQ.LohSTredC55QcoNI4g7WF_JwpmACbuPNbRd-MXuDIv0';
 // 添加请求拦截器

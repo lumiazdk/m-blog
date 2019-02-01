@@ -50,10 +50,10 @@ const afoptions = [
     k: 'add',
     name: '添加'
   },
-  {
-    k: 'follow',
-    // name: '关注'
-  }
+  // {
+  //   k: 'follow',
+  //   name: '关注'
+  // }
 ];
 const afITEM_HEIGHT = 48;
 const styles = theme => ({
