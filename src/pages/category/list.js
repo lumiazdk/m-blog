@@ -25,6 +25,7 @@ class List extends React.Component {
         },
         downcompleted: 0,
         upcompleted: 0,
+        disable: false
 
     };
     getlist = () => {
@@ -101,16 +102,20 @@ class List extends React.Component {
         }
         async function touchEnd() {
             var _viewHeight = _this.refs.swiperwrapper.offsetHeight;
-            var _contentHeight = _this.refs.swiperslide.offsetHeight;
+            var _contentHeight = _this.refs.wrapper.offsetHeight;
+            console.log(_this.refs.swiperwrapper.getBoundingClientRect())
+            console.log(Math.abs(swiper.translate))
             // 上拉加载
-            if (swiper.translate <= _viewHeight - _contentHeight - 50 && swiper.translate < 0) {
+            if (Math.abs(swiper.translate) >= _viewHeight - _contentHeight - 50 && swiper.translate < 0) {
                 console.log("已经到达底部！");
-
-                if (!_this.state.no_data) {
+                if (!_this.state.no_data && _this.state.disable == false) {
                     _this.upprogressstart()
                     let { page } = _this.state
                     page = page + 1
                     await _this.setState({ page: page })
+                    await _this.setState({
+                        disable: true
+                    })
                     let data = await _this.getlist()
 
                     if (data.code == 1) {
@@ -149,6 +154,9 @@ class List extends React.Component {
 
                     }
                     swiper.update()
+                    _this.setState({
+                        disable: false
+                    })
                 }
 
             }
@@ -158,15 +166,16 @@ class List extends React.Component {
                 const page = 1
                 _this.setState({ page })
                 _this.downprogressstart()
-
                 let data = await _this.getlist()
                 if (data.code == 1) {
                     await _this.setState({
-                        list: data.result.result
+                        list: data.result.result,
+                        no_data: false
                     })
                     _this.downprogressend()
 
                 }
+
                 swiper.update()
 
             } else if (swiper.translate >= 0 && swiper.translate < 50) {

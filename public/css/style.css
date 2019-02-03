@@ -556,7 +556,7 @@ h1.loadingtext {
   text-transform: uppercase;
   font-family: 'Nunito', sans-serif;
   font-size: 2.6875em;
-  color: transparent;
+  /* color: transparent; */
   letter-spacing: 0.01em;
 }
 
