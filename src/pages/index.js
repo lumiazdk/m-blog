@@ -13,8 +13,8 @@ import SwipeableViews from 'react-swipeable-views';
 import axios from 'axios'
 import io from 'socket.io-client';
 import SocketIOClient from './socket.js'
-// global.ip = '47.244.57.219'
-global.ip = '192.168.0.10'
+global.ip = '47.244.57.219'
+// global.ip = '192.168.0.10'
 global.port = 80
 const socket = io(`http://${global.ip}:${global.port}`);
 global.socket = socket

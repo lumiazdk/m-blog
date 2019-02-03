@@ -67,7 +67,7 @@
 }
 
 #ajaxloader2 {
-  margin: 30px auto 0;
+  position: relative;
 }
 
 #ajaxloader2 .outer {
