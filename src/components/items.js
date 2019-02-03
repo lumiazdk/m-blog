@@ -51,7 +51,8 @@ class RecipeReviewCard extends React.Component {
         item: this.props.item,
         anchorEl: null,
         pageopen: false,
-        title: '详情'
+        title: '详情',
+        loading: true
     };
     //子页
     pagehandleClickOpen = () => {
@@ -104,6 +105,11 @@ class RecipeReviewCard extends React.Component {
         this.setState({ item })
         this.pagehandleClose()
     }
+    imgLoad = (event) => {
+        this.setState({
+            loading: false
+        })
+    }
     render() {
         const { item, anchorEl } = this.state;
         const { classes } = this.props;
@@ -148,12 +154,19 @@ class RecipeReviewCard extends React.Component {
                         title={item.user.user_name}
                         subheader={moment(item.create_time).fromNow()}
                     />
-                    <CardMedia
+                    {/* <CardMedia
                         className={classes.media}
                         image={item.background}
                         title="Paella dish"
                         onClick={this.pagehandleClickOpen}
-                    />
+                    /> */}
+                    <div style={{ height: '211px', width: '100%', display: 'block', position: 'relative' }}>
+                        {this.state.loading == true && <img src="./img/loading.gif" alt="" className='loading animated pulse img' />}
+                        {this.props.k < 3 && <img src={item.background} className='animated pulse img' onClick={this.pagehandleClickOpen} onLoad={this.imgLoad} />}
+                        {this.props.k >= 3 && <img src="./img/loading.gif" alt="" data-src={item.background} style={{ display: 'block' }} className='lazy_img img' onClick={this.pagehandleClickOpen} onLoad={this.imgLoad} />}
+                    </div>
+
+
                     <CardContent>
                         <Typography component="p" style={{ fontWeight: 'bolder' }}>
                             {item.title}
@@ -188,7 +201,7 @@ class RecipeReviewCard extends React.Component {
                                 <i className='iconfont icon-zhuanfa'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }}>
                                     {item.forward_num}
-                            </Typography>
+                                </Typography>
                             </Button>
                         </Grid>
 
@@ -197,7 +210,7 @@ class RecipeReviewCard extends React.Component {
                                 <i className='iconfont icon-chakan'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }}>
                                     {item.see_num}
-                            </Typography>
+                                </Typography>
                             </Button>
                         </Grid>
 

@@ -45,9 +45,10 @@ class Recent extends React.Component {
         chatList: [],
         isDetail: false,
         ischat: false,
-        is_readnum: 0
+        is_readnum: 0,
+        swiper: ''
     }
-    componentDidMount() {
+    async componentDidMount() {
         const _this = this
         let wrapper = this.refs.wrapper
         var swiper = new Swiper(wrapper, {
@@ -61,6 +62,9 @@ class Recent extends React.Component {
             }
 
         });
+        await this.setState({
+            swiper
+        })
         this.getnewfriend()
         this.getChat()
         global.socket.on('getChat', () => {
@@ -85,8 +89,12 @@ class Recent extends React.Component {
         this.setState({ open: false });
     };
     //新的好友
-    nfhandleClick = () => {
+    nfhandleClick = async () => {
         this.setState(state => ({ nfopen: !state.nfopen }));
+        setTimeout(() => {
+            this.state.swiper.update()
+
+        }, 1000);
     };
     //获取好友通知
     getnewfriend = async () => {

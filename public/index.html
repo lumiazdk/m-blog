@@ -26,7 +26,11 @@
   <script src='./Eleditor-master/jquery.min.js'></script>
   <script src='./Eleditor-master/webuploader.min.js'></script>
   <script src='./Eleditor-master/Eleditor.min.js'></script>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+  <script>
 
+  </script>
   <title>博客</title>
 </head>
 
@@ -34,17 +38,24 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
+  <div id="bodyLoading" class="">
+    <div id="ajaxloader2">
+      <div class="outer"></div>
+      <div class="inner"></div>
+    </div>
+    <h1 class="loadingtext">
+      <span>L</span>
+      <span>o</span>
+      <span>a</span>
+      <span>d</span>
+      <span>i</span>
+      <span>n</span>
+      <span>g</span>
+    </h1>
+  </div>
+
   <div id="root"></div>
-  <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   <style>
     html,
     body,
@@ -54,9 +65,16 @@
       padding: 0
     }
   </style>
-  <script>
-  </script>
+
 
 </body>
+<script>
+  window.onload = function () {
+    document.getElementById('bodyLoading').classList.add('animated', 'zoomOut')
+    setTimeout(() => {
+      document.getElementById('bodyLoading').style.display = 'none'
+    }, 1000)
+  }
+</script>
 
 </html>

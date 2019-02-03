@@ -52,7 +52,6 @@ class SendMessage extends React.Component {
         this.setState({
             swiper
         })
-        swiper.slideTo(1, 0, false)
 
         if (!this.props.chat_id) {
             let getChatId = await this.getChatId()
@@ -76,11 +75,13 @@ class SendMessage extends React.Component {
                 this.getMessage()
             }
         })
+        swiper.slideTo(1, 0, false)
+
     }
 
     //关闭
     handleClose = async (event) => {
-        let data = await axios({
+        let data = axios({
             method: 'post',
             url: 'updateChat',
             data: {
@@ -178,7 +179,7 @@ class SendMessage extends React.Component {
 
                 <ul className="chat-thread" ref='wrapper'>
                     <div className="swiper-wrapper" ref='swiperwrapper'>
-                        <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
+                        <div className="swiper-slide fix" ref='swiperslide'>
                             {this.state.messageList.map(item => {
                                 if (item.user_id == JSON.parse(localStorage.userInfo).user_id) {
                                     return (<li className="me" key={item.id}>

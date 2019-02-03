@@ -25,7 +25,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import './addPost.scss'
-import E from 'wangeditor'
 import Select from '@material-ui/core/Select';
 import ImageCompressor from 'image-compressor.js'
 const options = [
@@ -159,7 +158,8 @@ class User extends React.Component {
                     this.setState({
                         content: artEditor.getContent()
                     })
-                }
+                },
+                
             });
             this.handleClose()
         }

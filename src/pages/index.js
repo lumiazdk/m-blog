@@ -8,14 +8,12 @@ import User from './user/user.js'
 import Category from './category/category.js'
 import Friends from './friends/friends.js'
 import './find/find.js'
-import indexStyles from './index.scss'
+import './index.scss'
 import SwipeableViews from 'react-swipeable-views';
-import './icon.scss'
 import axios from 'axios'
 import io from 'socket.io-client';
 import SocketIOClient from './socket.js'
 global.ip = '47.244.57.219'
-
 // global.ip = '192.168.0.10'
 global.port = 80
 const socket = io(`http://${global.ip}:${global.port}`);

@@ -56,7 +56,19 @@ class List extends React.Component {
             preloadImages: false,
             on: {
                 touchMove: touchMove,
-                touchEnd: touchEnd
+                touchEnd: touchEnd,
+                transitionEnd: function () {
+                    let box = document.getElementsByClassName('lazy_img')
+                    // console.log(box[2].getBoundingClientRect().bottom)
+                    for (let i = 0; i < box.length; i++) {
+                        if (box[i].getBoundingClientRect().bottom < 820) {
+                            let attr = box[i].getAttribute('data-src')
+                            box[i].setAttribute('src', attr)
+                            // box[i].style.display='block'
+                            box[i].classList.add('animated', 'bounceIn')
+                        }
+                    }
+                },
             }
 
         });
@@ -78,11 +90,14 @@ class List extends React.Component {
             //手动滑动中触发
             // var _viewHeight = this.refs['swiper-wrapper'].offsetHeight;
             // var _contentHeight = this.refs['swiper-slide'].offsetHeight;
+
+
             if (swiper.translate < 50 && swiper.translate > 0) {
                 console.log('下拉刷新')
             } else if (swiper.translate > 50) {
                 console.log('释放刷新')
             }
+
         }
         async function touchEnd() {
             var _viewHeight = _this.refs.swiperwrapper.offsetHeight;
@@ -221,11 +236,11 @@ class List extends React.Component {
                             {this.state.list.length == 0 && <div className='up'>
                                 <img src="/img/no_data.png" alt="" />
                             </div>}
-                            {this.state.list.map((item, k) => (<div className='items' key={k}><Items item={item}></Items></div>))}
+                            {this.state.list.map((item, k) => (<div className='items' key={k}><Items item={item} k={k}></Items></div>))}
                             <div className='down' ref='down'>
                                 {this.state.no_data && this.state.list.length > 0 && this.state.loadingText}
                             </div>
-                            {this.state.uploading && <LinearProgress variant="determinate" value={this.state.upcompleted} color="secondary" />}
+                            {this.state.uploading && this.state.list.length != 0 && <LinearProgress variant="determinate" value={this.state.upcompleted} color="secondary" />}
                         </div>
                     </div>
                 </div>

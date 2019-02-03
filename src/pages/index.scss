@@ -12,3 +12,8 @@
     height: 100%;
   }
 }
+.fix:after{
+  display:block; 
+  content:''; 
+  clear:both; 
+}
