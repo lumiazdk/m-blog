@@ -7,7 +7,7 @@ import axios from 'axios'
 import Swiper from 'swiper'
 const styles = theme => ({
     progress: {
-        margin: theme.spacing.unit * 2,
+        // margin: theme.spacing.unit * 2,
     },
 });
 class List extends React.Component {
@@ -25,7 +25,8 @@ class List extends React.Component {
         },
         downcompleted: 0,
         upcompleted: 0,
-        disable: false
+        disable: false,
+        swiper: ''
 
     };
     getlist = () => {
@@ -73,7 +74,9 @@ class List extends React.Component {
             }
 
         });
-
+        this.setState({
+            swiper
+        })
         this.downprogressstart()
         let data = await this.getlist()
         if (data.code == 1) {
@@ -95,8 +98,12 @@ class List extends React.Component {
 
             if (swiper.translate < 50 && swiper.translate > 0) {
                 console.log('下拉刷新')
-            } else if (swiper.translate > 50) {
+                document.getElementsByClassName('icon-jiantou')[0].classList.remove("upic");
+                document.getElementsByClassName('icon-jiantou')[0].classList.add("downic");
+
+            } else if (swiper.translate > 45) {
                 console.log('释放刷新')
+                document.getElementsByClassName('icon-jiantou')[0].classList.add("upic");
             }
 
         }
@@ -106,7 +113,7 @@ class List extends React.Component {
             console.log(_this.refs.swiperwrapper.getBoundingClientRect())
             console.log(Math.abs(swiper.translate))
             // 上拉加载
-            if (Math.abs(swiper.translate) >= _viewHeight - _contentHeight - 50 && swiper.translate < 0) {
+            if (Math.abs(swiper.translate) >= _viewHeight - _contentHeight && swiper.translate < 0) {
                 console.log("已经到达底部！");
                 if (!_this.state.no_data && _this.state.disable == false) {
                     _this.upprogressstart()
@@ -238,9 +245,9 @@ class List extends React.Component {
         return (
             <div className='list'>
                 {this.state.downloading && <LinearProgress variant="determinate" value={this.state.downcompleted} />}
-
                 <div className="wrapper" ref='wrapper'>
                     <div className="swiper-wrapper" ref='swiperwrapper'>
+                        <div className='arrow' ref='arrow'><i className='iconfont icon-jiantou'></i></div>
                         <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
                             {this.state.list.length == 0 && <div className='up'>
                                 <img src="/img/no_data.png" alt="" />
@@ -249,9 +256,11 @@ class List extends React.Component {
                             <div className='down' ref='down'>
                                 {this.state.no_data && this.state.list.length > 0 && this.state.loadingText}
                             </div>
-                            {this.state.uploading && this.state.list.length != 0 && <LinearProgress variant="determinate" value={this.state.upcompleted} color="secondary" />}
                         </div>
+
                     </div>
+                    {this.state.uploading && this.state.list.length != 0 && <LinearProgress variant="determinate" value={this.state.upcompleted} color="secondary" style={{ position: 'absolute', bottom: '0px', width: '100%' }} />}
+
                 </div>
             </div>
 
