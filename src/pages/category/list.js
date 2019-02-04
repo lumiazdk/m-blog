@@ -70,6 +70,8 @@ class List extends React.Component {
                             box[i].classList.add('animated', 'bounceIn')
                         }
                     }
+                    document.getElementsByClassName('icon-jiantou')[0].classList.remove("upic");
+                    document.getElementsByClassName('icon-jiantou')[0].classList.add("downic");
                 },
             }
 
