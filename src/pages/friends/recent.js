@@ -176,7 +176,7 @@ class Recent extends React.Component {
                             <Collapse in={this.state.nfopen} timeout="auto" unmountOnExit>
                                 <List component="div">
                                     {this.state.newfriendList.map((item, k) =>
-                                        <ListItem button className={classes.nested} onClick={this.toDetail.bind(this, item)} key={k}>
+                                        <ListItem button className={classes.nested} onClick={this.toDetail.bind(this, item)} key={k} className='animated lightSpeedIn'>
                                             {item.request_id == JSON.parse(localStorage.userInfo).user_id &&
                                                 <Avatar src={item.friend.user_profile_photo}>
                                                 </Avatar>}
@@ -208,7 +208,7 @@ class Recent extends React.Component {
                             </li> */}
                             {/* 聊天 */}
                             <List className={classes.root} ref='chat'>
-                                {this.state.chatList.map(item => <ListItem onClick={this.toChat.bind(this, item)} key={item.id} className='chatItem'>
+                                {this.state.chatList.map(item => <ListItem onClick={this.toChat.bind(this, item)} key={item.id} className='chatItem animated lightSpeedIn' >
                                     <Badge className={classes.margin} badgeContent={item.message_num} color="secondary">
                                         <Avatar src={item.friendInfo.user_profile_photo}>
                                         </Avatar>

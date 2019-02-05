@@ -70,8 +70,8 @@ class List extends React.Component {
                             box[i].classList.add('animated', 'bounceIn')
                         }
                     }
-                    document.getElementsByClassName('icon-jiantou')[0].classList.remove("upic");
-                    document.getElementsByClassName('icon-jiantou')[0].classList.add("downic");
+                    _this.refs['icon-jiantou'].classList.remove("upic");
+                    _this.refs['icon-jiantou'].classList.add("downic");
                 },
             }
 
@@ -100,12 +100,12 @@ class List extends React.Component {
 
             if (swiper.translate < 50 && swiper.translate > 0) {
                 console.log('下拉刷新')
-                document.getElementsByClassName('icon-jiantou')[0].classList.remove("upic");
-                document.getElementsByClassName('icon-jiantou')[0].classList.add("downic");
+                _this.refs['icon-jiantou'].classList.remove("upic");
+                _this.refs['icon-jiantou'].classList.add("downic");
 
             } else if (swiper.translate > 45) {
                 console.log('释放刷新')
-                document.getElementsByClassName('icon-jiantou')[0].classList.add("upic");
+                _this.refs['icon-jiantou'].classList.add("upic");
             }
 
         }
@@ -249,7 +249,7 @@ class List extends React.Component {
                 {this.state.downloading && <LinearProgress variant="determinate" value={this.state.downcompleted} />}
                 <div className="wrapper" ref='wrapper'>
                     <div className="swiper-wrapper" ref='swiperwrapper'>
-                        <div className='arrow' ref='arrow'><i className='iconfont icon-jiantou'></i></div>
+                        <div className='arrow' ref='arrow'><i className='iconfont icon-jiantou' ref='icon-jiantou'></i></div>
                         <div className="swiper-slide" style={{ height: 'auto' }} ref='swiperslide'>
                             {this.state.list.length == 0 && <div className='up'>
                                 <img src="/img/no_data.png" alt="" />

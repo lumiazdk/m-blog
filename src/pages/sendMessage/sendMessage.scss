@@ -33,9 +33,6 @@
     border-top: 15px solid rgba(25, 147, 147, 0.2);
   }
   .chat-thread .me {
-    animation: show-chat-odd 0.15s 1 ease-in;
-    -moz-animation: show-chat-odd 0.15s 1 ease-in;
-    -webkit-animation: show-chat-odd 0.15s 1 ease-in;
     float: right;
     margin-right: 100px;
     color: #0ad5c1;
@@ -55,9 +52,6 @@
     right: -15px;
   }
   .chat-thread .you {
-    animation: show-chat-even 0.15s 1 ease-in;
-    -moz-animation: show-chat-even 0.15s 1 ease-in;
-    -webkit-animation: show-chat-even 0.15s 1 ease-in;
     float: left;
     margin-left: 60px;
     color: #0ec879;

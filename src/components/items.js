@@ -179,12 +179,19 @@ class RecipeReviewCard extends React.Component {
                 <CardActions className={classes.actions} disableActionSpacing>
                     <Grid container spacing={24}>
                         <Grid item xs={3}>
-                            <Button color={item.isfabulous ? 'secondary' : 'default'} className={classes.button} onClick={this.addfabulous.bind(this, item)}>
+                            {item.isfabulous && <Button color='secondary' className={classes.button} onClick={this.addfabulous.bind(this, item)} className='animated bounce'>
+                                <i className='iconfont icon-like-b animated bounce'></i>
+                                <Typography component="span" style={{ marginLeft: '10px' }} color={item.isfabulous ? 'secondary' : 'default'}>
+                                    {item.fabulous_num}
+                                </Typography>
+                            </Button>}
+                            {!item.isfabulous && <Button color='default' className={classes.button} onClick={this.addfabulous.bind(this, item)}>
                                 <i className='iconfont icon-like-b'></i>
                                 <Typography component="span" style={{ marginLeft: '10px' }} color={item.isfabulous ? 'secondary' : 'default'}>
                                     {item.fabulous_num}
                                 </Typography>
-                            </Button>
+                            </Button>}
+
                         </Grid>
 
                         <Grid item xs={3}>

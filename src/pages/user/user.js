@@ -6,7 +6,6 @@ import axios from 'axios'
 import { withSnackbar } from 'notistack';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -152,14 +151,14 @@ class User extends React.Component {
                     server: `http://${global.ip}/upload`,
                     fileSizeLimit: 2
                 },
-                changer: ()=> {
+                changer: () => {
                     console.log('内容被编辑了');
                     console.log(artEditor.getContent())
                     this.setState({
                         content: artEditor.getContent()
                     })
                 },
-                
+
             });
             this.handleClose()
         }
@@ -359,7 +358,7 @@ class User extends React.Component {
 
                             </FormControl>
                         </div>
-                        <Card className={classes.card}>
+                        <Card className={classes.card} >
                             <img src={this.state.imgPath} alt="" width='100%' height='219px' />
                         </Card>
                         <input
@@ -384,14 +383,6 @@ class User extends React.Component {
                 </Dialog>
                 <Card className={classes.card}>
                     <CardActionArea>
-                        <CardMedia
-                            component="img"
-                            alt="Contemplative Reptile"
-                            className={classes.media}
-                            height="140"
-                            image="/img/bj.jpg"
-                            title="Contemplative Reptile"
-                        />
                         <CardHeader
                             avatar={
                                 <Avatar alt="头像" src={userInfo.user_profile_photo} className={classes.bigAvatar} />
@@ -420,7 +411,7 @@ class User extends React.Component {
                                         }}
                                     >
                                         {options.map(option => (
-                                            <MenuItem key={option.k} selected={option === 'Pyxis'} onClick={event => this.handleMenuItemClick(event, option.k)}>
+                                            <MenuItem key={option.k}  onClick={event => this.handleMenuItemClick(event, option.k)}>
                                                 {option.name}
 
                                             </MenuItem>
@@ -429,7 +420,7 @@ class User extends React.Component {
                                 </div>
                             }
                             title={userInfo.user_name}
-                        // subheader="September 14, 2016"
+                            subheader={userInfo.user_nickname}
                         />
                         <CardContent>
 

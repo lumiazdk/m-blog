@@ -182,11 +182,11 @@ class SendMessage extends React.Component {
                         <div className="swiper-slide fix" ref='swiperslide'>
                             {this.state.messageList.map(item => {
                                 if (item.user_id == JSON.parse(localStorage.userInfo).user_id) {
-                                    return (<li className="me" key={item.id}>
+                                    return (<li className="me animated slideInRight" key={item.id}>
                                         <Avatar alt="Remy Sharp" className='Avatar' src={JSON.parse(localStorage.userInfo).user_profile_photo} />
                                         {item.message}</li>)
                                 } else {
-                                    return (<li className="you" key={item.id}>
+                                    return (<li className="you animated slideInLeft" key={item.id}>
                                         <Avatar alt="Remy Sharp" className='Avatar' src={this.props.user_profile_photo} />
                                         {item.message}</li>)
                                 }

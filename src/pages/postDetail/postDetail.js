@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { func } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -67,18 +67,20 @@ class PostDetail extends React.Component {
             mousewheel: true,
             on: {
                 // touchMove: touchMove,
-                // touchEnd: touchEnd
+                touchEnd: touchEnd
             }
 
         });
         await this.setState({
             swiper
         })
-
+        function touchEnd() {
+            swiper.update()
+        }
         //获取评论
-        this.getComment()
+        this.getComment(1)
         //获取赞
-        this.getfabulous()
+        this.getfabulous(1)
         //获取查看数量
         this.seePostNum()
         swiper.update()
@@ -121,7 +123,7 @@ class PostDetail extends React.Component {
         }
     };
     //获取赞
-    getfabulous = async () => {
+    getfabulous = async (i) => {
         let data = await axios({
             method: 'post',
             url: 'getFabulous',
@@ -130,9 +132,14 @@ class PostDetail extends React.Component {
             }
         });
         if (data.code == 1) {
-            this.setState({
+            await this.setState({
                 fabulousList: data.result.result
             })
+            this.state.swiper.update()
+            if (i != 1) {
+                this.state.swiper.slideTo(1, 0, false)
+
+            }
         }
     }
     //打开回复
@@ -145,6 +152,7 @@ class PostDetail extends React.Component {
         }
         this.setState({ open: true });
         this.setState({ isReply: value });
+        this.state.swiper.slideTo(1, 0, false)
 
     };
 
@@ -152,7 +160,7 @@ class PostDetail extends React.Component {
         this.setState({ open: false });
     };
     // 获取评论
-    getComment = async () => {
+    getComment = async (i) => {
         let data = await axios({
             method: 'post',
             url: 'getComment',
@@ -166,6 +174,11 @@ class PostDetail extends React.Component {
                 detail: { ...this.state.detail, ...{ comment_num: data.result.result.length } }
             })
             this.state.swiper.update()
+            if (i != 1) {
+                this.state.swiper.slideTo(1, 0, false)
+
+            }
+
         }
     }
     //回复
@@ -189,6 +202,7 @@ class PostDetail extends React.Component {
             this.enqueueSnackbar('评论成功', 'success')
             this.getComment()
             this.handleClose()
+
         } else {
             this.enqueueSnackbar('评论失败', 'error')
             this.handleClose()
@@ -312,12 +326,21 @@ class PostDetail extends React.Component {
                                     </Typography>
                                     <Grid container spacing={24}>
                                         <Grid item xs={3}>
-                                            <Button color={detail.isfabulous ? 'secondary' : 'default'} className={classes.button} onClick={this.addfabulous.bind(this, detail)}>
-                                                <i className='iconfont icon-like-b'></i>
-                                                <Typography component="span" style={{ marginLeft: '10px' }} color={detail.isfabulous ? 'secondary' : 'default'}>
-                                                    {detail.fabulous_num}
-                                                </Typography>
-                                            </Button>
+                                            <Grid item xs={3}>
+                                                {detail.isfabulous && <Button color='secondary' className={classes.button} onClick={this.addfabulous.bind(this, detail)} className='animated bounce'>
+                                                    <i className='iconfont icon-like-b animated bounce'></i>
+                                                    <Typography component="span" style={{ marginLeft: '10px' }} color={detail.isfabulous ? 'secondary' : 'default'}>
+                                                        {detail.fabulous_num}
+                                                    </Typography>
+                                                </Button>}
+                                                {!detail.isfabulous && <Button color='default' className={classes.button} onClick={this.addfabulous.bind(this, detail)}>
+                                                    <i className='iconfont icon-like-b '></i>
+                                                    <Typography component="span" style={{ marginLeft: '10px' }} color={detail.isfabulous ? 'secondary' : 'default'}>
+                                                        {detail.fabulous_num}
+                                                    </Typography>
+                                                </Button>}
+
+                                            </Grid>
                                         </Grid>
 
                                         <Grid item xs={3}>
@@ -351,16 +374,15 @@ class PostDetail extends React.Component {
 
                                     <Grid container spacing={24}>
                                         {this.state.fabulousList.slice(0, 9).map((item, k) =>
-                                            <Grid item key={k}>
+                                            <Grid item key={k} className='animated bounce'>
                                                 <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />
                                             </Grid>)}
-
                                     </Grid>
                                     <Typography gutterBottom variant="subtitle1" style={{ marginTop: '10px' }}>
                                         回帖({this.state.commentList.length})
                                     <Divider />
                                     </Typography>
-                                    {this.state.commentList.map((item, k) => <Grid container spacing={8} style={{ marginBottom: '10px' }} key={k}>
+                                    {this.state.commentList.map((item, k) => <Grid container spacing={8} style={{ marginBottom: '10px' }} key={k} className='animated slideInRight'>
                                         <Grid item xs={2}>
                                             <ButtonBase className={classes.image}>
                                                 <Avatar alt="Remy Sharp" src={item.userInfo.user_profile_photo} className={classes.avatar} />

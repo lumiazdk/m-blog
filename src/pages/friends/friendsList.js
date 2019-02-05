@@ -91,13 +91,13 @@ class FriendsList extends React.Component {
             </div>}
 
             <List className={classes.root}>
-              {this.state.newfriendList.map(item => <React.Fragment key={item.id}>
-                <ListItem onClick={this.handleClickOpen.bind(this, item)}>
+              {this.state.newfriendList.map(item => <div key={item.id} className='animated lightSpeedIn'>
+                <ListItem onClick={this.handleClickOpen.bind(this, item)} >
                   <Avatar src={item.friendInfo.user_profile_photo}>
                   </Avatar>
                   <ListItemText primary={item.friendInfo.user_name} />
                 </ListItem><Divider />
-              </React.Fragment>)}
+              </div>)}
             </List>
           </div>
         </div>
