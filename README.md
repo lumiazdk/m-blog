@@ -16,6 +16,6 @@ npm install
 npm run start
 ```
 
-## The idea behind the example test
+## The idea behind the example test2
 
 [Create React App](https://github.com/facebookincubator/create-react-app) with no build configuration.
